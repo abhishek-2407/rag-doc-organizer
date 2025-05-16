@@ -1,210 +1,41 @@
 
-import React, { useState, useEffect } from 'react';
-import { toast } from "@/components/ui/use-toast";
+import React from 'react';
+import { useDocumentManager } from './useDocumentManager';
+import { handleCreateFolder, handleCreateChildFolder } from './folderUtils';
 import FolderTile from './FolderTile';
 import FolderModal from './FolderModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
 
-// Define ApiUrl here - in a real app, this would come from environment variables
-const ApiUrl = 'https://api.example.com';
-const UserId = 'user123';
-
 const DocumentManager = () => {
-  const [newFolderName, setNewFolderName] = useState('');
-  const [newChildFolderName, setNewChildFolderName] = useState('');
-  const [parentFolderForChildFolder, setParentFolderForChildFolder] = useState<string | null>(null);
-  const [filesByFolder, setFilesByFolder] = useState<Record<string, any[]>>({});
-  const [folderStructure, setFolderStructure] = useState<Record<string, any>>({});
-  const [pendingUploads, setPendingUploads] = useState<Record<string, File[]>>({});
-  const [loadingUpload, setLoadingUpload] = useState<Record<string, boolean>>({});
-  const [loadingRAG, setLoadingRAG] = useState<Record<string, boolean>>({});
-  const [loadingDelete, setLoadingDelete] = useState<Record<string, boolean>>({});
-  const [loadingFiles, setLoadingFiles] = useState(true);
-  const [collapsedFolders, setCollapsedFolders] = useState<Record<string, boolean>>({});
-  
-  // Modal state
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    fetchFiles();
-  }, []);
-
-  // Simulated fetch function - in a real app, this would make an API call
-  const fetchFiles = async () => {
-    setLoadingFiles(true);
-    
-    // Simulated data - in production this would come from your API
-    setTimeout(() => {
-      const mockData = {
-        status: 'success',
-        data: [
-          { folder_name: 'Project A', file_id: 'file1', file_name: 'document1.pdf', rag_status: true },
-          { folder_name: 'Project A', file_id: 'file2', file_name: 'document2.pdf', rag_status: false },
-          { folder_name: 'Project B', file_id: 'file3', file_name: 'document3.pdf', rag_status: false },
-          { folder_name: 'Project B/Research', file_id: 'file4', file_name: 'research.pdf', rag_status: true },
-          { folder_name: 'Project C/Data/Results', file_id: 'file5', file_name: 'results.pdf', rag_status: false }
-        ]
-      };
-      
-      processFetchedData(mockData);
-      setLoadingFiles(false);
-    }, 1000);
-  };
-
-  const processFetchedData = (response: any) => {
-    if (response.status === 'success') {
-      const folderMap: Record<string, any[]> = {};
-      const structureMap: Record<string, any> = {};
-
-      response.data.forEach((file: any) => {
-        const folderPath = file.folder_name;
-        if (!folderMap[folderPath]) folderMap[folderPath] = [];
-        folderMap[folderPath].push(file);
-
-        const pathParts = folderPath.split('/');
-        let currentLevel = structureMap;
-        pathParts.forEach((part: string) => {
-          if (!currentLevel[part]) currentLevel[part] = {};
-          currentLevel = currentLevel[part];
-        });
-      });
-
-      setFilesByFolder(folderMap);
-      setFolderStructure(structureMap);
-    }
-  };
-
-  const handleCreateFolder = () => {
-    if (!newFolderName.trim()) {
-      toast({ title: "Error", description: "Folder name cannot be empty", variant: "destructive" });
-      return;
-    }
-    
-    if (!Object.keys(folderStructure).includes(newFolderName)) {
-      setFolderStructure(prev => ({ ...prev, [newFolderName]: {} }));
-      setFilesByFolder(prev => ({ ...prev, [newFolderName]: [] }));
-      setNewFolderName('');
-      toast({ title: "Success", description: `Folder "${newFolderName}" created successfully!` });
-    } else {
-      toast({ title: "Error", description: "Folder already exists", variant: "destructive" });
-    }
-  };
-
-  // Add a function to create a folder inside a parent folder
-  const handleCreateChildFolder = () => {
-    if (!newChildFolderName.trim() || !parentFolderForChildFolder) {
-      toast({ 
-        title: "Error", 
-        description: "Child folder name cannot be empty and parent folder must be selected", 
-        variant: "destructive" 
-      });
-      return;
-    }
-    
-    const newPath = `${parentFolderForChildFolder}/${newChildFolderName}`;
-    
-    // Check if the folder already exists at this path
-    const folderPaths = Object.keys(filesByFolder);
-    if (folderPaths.includes(newPath)) {
-      toast({ title: "Error", description: "Folder already exists at this path", variant: "destructive" });
-      return;
-    }
-    
-    // Update the folder structure
-    setFolderStructure(prev => {
-      const updated = {...prev};
-      let parentFolder = updated;
-      
-      // Navigate to the parent folder in the structure
-      const parts = parentFolderForChildFolder.split('/');
-      for (const part of parts) {
-        parentFolder = parentFolder[part];
-      }
-      
-      // Add the new folder to the parent
-      parentFolder[newChildFolderName] = {};
-      
-      return updated;
-    });
-    
-    // Update the files by folder
-    setFilesByFolder(prev => ({ ...prev, [newPath]: [] }));
-    
-    // Reset state
-    setNewChildFolderName('');
-    setParentFolderForChildFolder(null);
-    
-    toast({ 
-      title: "Success", 
-      description: `Folder "${newChildFolderName}" created successfully inside "${parentFolderForChildFolder}"!` 
-    });
-  };
-
-  const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>, folderPath: string) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    
-    const selectedFiles = Array.from(e.target.files);
-    setPendingUploads(prev => ({
-      ...prev,
-      [folderPath]: [...(prev[folderPath] || []), ...selectedFiles]
-    }));
-    e.target.value = '';
-  };
-
-  const handleUploadDocuments = async (folderPath: string) => {
-    const files = pendingUploads[folderPath];
-    if (!files?.length) return;
-
-    setLoadingUpload(prev => ({ ...prev, [folderPath]: true }));
-
-    // Simulate upload - in production this would make actual API calls
-    setTimeout(() => {
-      const uploaded = files.map(file => ({
-        file_name: file.name,
-        file_id: `file_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-        folder_name: folderPath,
-        rag_status: false
-      }));
-
-      setFilesByFolder(prev => ({
-        ...prev,
-        [folderPath]: [...(prev[folderPath] || []), ...uploaded]
-      }));
-      setPendingUploads(prev => ({ ...prev, [folderPath]: [] }));
-      toast({ title: "Success", description: "Files uploaded successfully!" });
-      setLoadingUpload(prev => ({ ...prev, [folderPath]: false }));
-    }, 1500);
-  };
-
-  const handleCreateRAG = async (fileId: string, folderPath: string) => {
-    setLoadingRAG(prev => ({ ...prev, [fileId]: true }));
-    
-    // Simulate RAG creation - in production this would make actual API calls
-    setTimeout(() => {
-      const updated = filesByFolder[folderPath].map(file =>
-        file.file_id === fileId ? { ...file, rag_status: true } : file
-      );
-      
-      setFilesByFolder(prev => ({ ...prev, [folderPath]: updated }));
-      toast({ title: "Success", description: "RAG created successfully!" });
-      setLoadingRAG(prev => ({ ...prev, [fileId]: false }));
-    }, 1500);
-  };
-
-  const handleDeleteFile = async (fileId: string, folderPath: string) => {
-    setLoadingDelete(prev => ({ ...prev, [fileId]: true }));
-    
-    // Simulate file deletion - in production this would make actual API calls
-    setTimeout(() => {
-      const updated = filesByFolder[folderPath].filter(f => f.file_id !== fileId);
-      setFilesByFolder(prev => ({ ...prev, [folderPath]: updated }));
-      toast({ title: "Success", description: "File deleted successfully!" });
-      setLoadingDelete(prev => ({ ...prev, [fileId]: false }));
-    }, 1000);
-  };
+  const {
+    newFolderName,
+    setNewFolderName,
+    newChildFolderName,
+    setNewChildFolderName,
+    parentFolderForChildFolder,
+    setParentFolderForChildFolder,
+    filesByFolder,
+    setFilesByFolder,
+    folderStructure,
+    setFolderStructure,
+    pendingUploads,
+    setPendingUploads,
+    loadingUpload,
+    setLoadingUpload,
+    loadingRAG,
+    setLoadingRAG,
+    loadingDelete,
+    setLoadingDelete,
+    loadingFiles,
+    collapsedFolders,
+    setCollapsedFolders,
+    selectedFolder,
+    setSelectedFolder,
+    isModalOpen,
+    setIsModalOpen
+  } = useDocumentManager();
 
   const handleFolderClick = (folderName: string) => {
     setSelectedFolder(folderName);
@@ -229,7 +60,8 @@ const DocumentManager = () => {
           className="max-w-xs bg-gray-800 border-gray-700 text-white"
         />
         <Button 
-          onClick={handleCreateFolder}
+          onClick={() => handleCreateFolder(newFolderName, folderStructure, setFolderStructure, 
+            filesByFolder, setFilesByFolder, setNewFolderName)}
           className="bg-pink-600 hover:bg-pink-700 flex items-center gap-2"
         >
           <Plus size={16} /> Create Folder
@@ -248,7 +80,9 @@ const DocumentManager = () => {
               className="bg-gray-800 border-gray-700 text-white flex-1"
             />
             <Button 
-              onClick={handleCreateChildFolder}
+              onClick={() => handleCreateChildFolder(newChildFolderName, parentFolderForChildFolder, 
+                folderStructure, setFolderStructure, filesByFolder, setFilesByFolder, 
+                setNewChildFolderName, setParentFolderForChildFolder)}
               className="bg-pink-600 hover:bg-pink-700"
             >
               Create
@@ -295,16 +129,16 @@ const DocumentManager = () => {
           filesByFolder={filesByFolder}
           pendingUploads={pendingUploads}
           setPendingUploads={setPendingUploads}
-          handleFileSelection={handleFileSelection}
-          handleUploadDocuments={handleUploadDocuments}
-          handleCreateRAG={handleCreateRAG}
-          handleDeleteFile={handleDeleteFile}
           loadingUpload={loadingUpload}
+          setLoadingUpload={setLoadingUpload}
           loadingRAG={loadingRAG}
+          setLoadingRAG={setLoadingRAG}
           loadingDelete={loadingDelete}
+          setLoadingDelete={setLoadingDelete}
           collapsedFolders={collapsedFolders}
           setCollapsedFolders={setCollapsedFolders}
           onCreateChildFolder={setParentFolderForChildFolder}
+          setFilesByFolder={setFilesByFolder}
         />
       )}
     </div>

@@ -5,30 +5,31 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose
 } from "@/components/ui/dialog";
-import { X, Folder, File, ArrowDown, ArrowUp, Plus } from 'lucide-react';
+import { ArrowDown, ArrowUp, Folder, File, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { handleFileSelection, handleUploadDocuments, handleCreateRAG, handleDeleteFile } from './fileUtils';
+import { FilesByFolder, FolderStructure } from './useDocumentManager';
 
 interface FolderModalProps {
   isOpen: boolean;
   onClose: () => void;
   folderName: string;
-  folderStructure: any;
-  filesByFolder: any;
-  pendingUploads: any;
-  setPendingUploads: (value: any) => void;
-  handleFileSelection: (e: React.ChangeEvent<HTMLInputElement>, folderPath: string) => void;
-  handleUploadDocuments: (folderPath: string) => void;
-  handleCreateRAG: (fileId: string, folderPath: string) => void;
-  handleDeleteFile: (fileId: string, folderPath: string) => void;
-  loadingUpload: any;
-  loadingRAG: any;
-  loadingDelete: any;
-  collapsedFolders: any;
-  setCollapsedFolders: (value: any) => void;
+  folderStructure: FolderStructure;
+  filesByFolder: FilesByFolder;
+  pendingUploads: Record<string, File[]>;
+  setPendingUploads: React.Dispatch<React.SetStateAction<Record<string, File[]>>>;
+  loadingUpload: Record<string, boolean>;
+  setLoadingUpload: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  loadingRAG: Record<string, boolean>;
+  setLoadingRAG: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  loadingDelete: Record<string, boolean>;
+  setLoadingDelete: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  collapsedFolders: Record<string, boolean>;
+  setCollapsedFolders: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   onCreateChildFolder: (folderPath: string) => void;
+  setFilesByFolder: React.Dispatch<React.SetStateAction<FilesByFolder>>;
 }
 
 const FolderModal = ({
@@ -39,16 +40,16 @@ const FolderModal = ({
   filesByFolder,
   pendingUploads,
   setPendingUploads,
-  handleFileSelection,
-  handleUploadDocuments,
-  handleCreateRAG,
-  handleDeleteFile,
   loadingUpload,
+  setLoadingUpload,
   loadingRAG,
+  setLoadingRAG,
   loadingDelete,
+  setLoadingDelete,
   collapsedFolders,
   setCollapsedFolders,
-  onCreateChildFolder
+  onCreateChildFolder,
+  setFilesByFolder
 }: FolderModalProps) => {
   // Toggle folder collapse state
   const toggleCollapse = (folderPath: string) => {
@@ -67,13 +68,21 @@ const FolderModal = ({
             type="file" 
             className="hidden" 
             multiple 
-            onChange={(e) => handleFileSelection(e, folderPath)} 
+            onChange={(e) => handleFileSelection(e, folderPath, pendingUploads, setPendingUploads)} 
             accept="application/pdf"
           />
           <Plus size={16} /> Select Files
         </label>
         <Button 
-          onClick={() => handleUploadDocuments(folderPath)} 
+          onClick={() => handleUploadDocuments(
+            folderPath, 
+            pendingUploads, 
+            setPendingUploads, 
+            loadingUpload, 
+            setLoadingUpload, 
+            filesByFolder,
+            setFilesByFolder
+          )} 
           disabled={loadingUpload[folderPath] || !(pendingUploads[folderPath]?.length > 0)}
           className="bg-pink-600 hover:bg-pink-700"
         >
@@ -142,7 +151,14 @@ const FolderModal = ({
                     {!file.rag_status && (
                       <Button 
                         size="sm" 
-                        onClick={() => handleCreateRAG(file.file_id, folderPath)}
+                        onClick={() => handleCreateRAG(
+                          file.file_id, 
+                          folderPath, 
+                          loadingRAG, 
+                          setLoadingRAG,
+                          filesByFolder,
+                          setFilesByFolder
+                        )}
                         disabled={loadingRAG[file.file_id]}
                         className="bg-amber-600 hover:bg-amber-700 h-8 text-xs"
                       >
@@ -152,7 +168,14 @@ const FolderModal = ({
                     <Button 
                       size="sm"
                       variant="destructive" 
-                      onClick={() => handleDeleteFile(file.file_id, folderPath)}
+                      onClick={() => handleDeleteFile(
+                        file.file_id, 
+                        folderPath, 
+                        loadingDelete, 
+                        setLoadingDelete,
+                        filesByFolder,
+                        setFilesByFolder
+                      )}
                       disabled={loadingDelete[file.file_id]}
                       className="h-8 text-xs"
                     >
