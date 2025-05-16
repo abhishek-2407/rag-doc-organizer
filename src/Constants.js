@@ -1,4 +1,4 @@
 
 // API URL Configuration
-export const ApiUrl = "http://13.232.68.73:8000"
+export const ApiUrl = "https://testing-doc-chat.duckdns.org"
 export const UserId = "admin001"
