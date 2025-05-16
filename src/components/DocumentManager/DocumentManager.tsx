@@ -13,6 +13,8 @@ const UserId = 'user123';
 
 const DocumentManager = () => {
   const [newFolderName, setNewFolderName] = useState('');
+  const [newChildFolderName, setNewChildFolderName] = useState('');
+  const [parentFolderForChildFolder, setParentFolderForChildFolder] = useState<string | null>(null);
   const [filesByFolder, setFilesByFolder] = useState<Record<string, any[]>>({});
   const [folderStructure, setFolderStructure] = useState<Record<string, any>>({});
   const [pendingUploads, setPendingUploads] = useState<Record<string, File[]>>({});
@@ -89,6 +91,56 @@ const DocumentManager = () => {
     } else {
       toast({ title: "Error", description: "Folder already exists", variant: "destructive" });
     }
+  };
+
+  // Add a function to create a folder inside a parent folder
+  const handleCreateChildFolder = () => {
+    if (!newChildFolderName.trim() || !parentFolderForChildFolder) {
+      toast({ 
+        title: "Error", 
+        description: "Child folder name cannot be empty and parent folder must be selected", 
+        variant: "destructive" 
+      });
+      return;
+    }
+    
+    const newPath = `${parentFolderForChildFolder}/${newChildFolderName}`;
+    
+    // Check if the folder already exists at this path
+    const folderPaths = Object.keys(filesByFolder);
+    if (folderPaths.includes(newPath)) {
+      toast({ title: "Error", description: "Folder already exists at this path", variant: "destructive" });
+      return;
+    }
+    
+    // Update the folder structure
+    setFolderStructure(prev => {
+      const updated = {...prev};
+      let parentFolder = updated;
+      
+      // Navigate to the parent folder in the structure
+      const parts = parentFolderForChildFolder.split('/');
+      for (const part of parts) {
+        parentFolder = parentFolder[part];
+      }
+      
+      // Add the new folder to the parent
+      parentFolder[newChildFolderName] = {};
+      
+      return updated;
+    });
+    
+    // Update the files by folder
+    setFilesByFolder(prev => ({ ...prev, [newPath]: [] }));
+    
+    // Reset state
+    setNewChildFolderName('');
+    setParentFolderForChildFolder(null);
+    
+    toast({ 
+      title: "Success", 
+      description: `Folder "${newChildFolderName}" created successfully inside "${parentFolderForChildFolder}"!` 
+    });
   };
 
   const handleFileSelection = (e: React.ChangeEvent<HTMLInputElement>, folderPath: string) => {
@@ -184,6 +236,34 @@ const DocumentManager = () => {
         </Button>
       </div>
 
+      {parentFolderForChildFolder && (
+        <div className="bg-gray-800 p-4 rounded-lg mb-8 max-w-2xl mx-auto border border-gray-700">
+          <h3 className="text-lg text-gray-300 mb-2">Creating folder inside: <span className="font-bold text-pink-400">{parentFolderForChildFolder}</span></h3>
+          <div className="flex flex-wrap gap-3">
+            <Input
+              type="text"
+              value={newChildFolderName}
+              placeholder="Child Folder Name"
+              onChange={(e) => setNewChildFolderName(e.target.value)}
+              className="bg-gray-800 border-gray-700 text-white flex-1"
+            />
+            <Button 
+              onClick={handleCreateChildFolder}
+              className="bg-pink-600 hover:bg-pink-700"
+            >
+              Create
+            </Button>
+            <Button 
+              onClick={() => setParentFolderForChildFolder(null)}
+              variant="outline"
+              className="border-gray-600 text-gray-300"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
       {loadingFiles ? (
         <div className="text-center p-12">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-pink-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
@@ -224,6 +304,7 @@ const DocumentManager = () => {
           loadingDelete={loadingDelete}
           collapsedFolders={collapsedFolders}
           setCollapsedFolders={setCollapsedFolders}
+          onCreateChildFolder={setParentFolderForChildFolder}
         />
       )}
     </div>

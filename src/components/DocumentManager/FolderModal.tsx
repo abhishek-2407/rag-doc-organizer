@@ -28,6 +28,7 @@ interface FolderModalProps {
   loadingDelete: any;
   collapsedFolders: any;
   setCollapsedFolders: (value: any) => void;
+  onCreateChildFolder: (folderPath: string) => void;
 }
 
 const FolderModal = ({
@@ -46,7 +47,8 @@ const FolderModal = ({
   loadingRAG,
   loadingDelete,
   collapsedFolders,
-  setCollapsedFolders
+  setCollapsedFolders,
+  onCreateChildFolder
 }: FolderModalProps) => {
   // Toggle folder collapse state
   const toggleCollapse = (folderPath: string) => {
@@ -76,6 +78,18 @@ const FolderModal = ({
           className="bg-pink-600 hover:bg-pink-700"
         >
           {loadingUpload[folderPath] ? 'Uploading...' : 'Upload Files'}
+        </Button>
+        
+        {/* Add button to create folder inside current folder */}
+        <Button 
+          onClick={() => {
+            onClose();
+            onCreateChildFolder(folderPath);
+          }}
+          variant="outline"
+          className="border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700"
+        >
+          <Plus size={16} className="mr-1" /> Add Folder
         </Button>
       </div>
 
