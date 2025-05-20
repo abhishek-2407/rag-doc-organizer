@@ -3,7 +3,7 @@ import React from 'react';
 import { FilesByFolder } from './useDocumentManager';
 import { toast } from "@/components/ui/use-toast";
 import axios from 'axios';
-import { ApiUrl } from '@/Constants';
+import { ApiUrl, UserId } from '@/Constants';
 
 export const handleFileSelection = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -42,11 +42,11 @@ export const handleUploadDocuments = async (
       formData.append('files', file);
     });
     formData.append('thread_id', folderPath);
-    formData.append('user_id', "11111111-1111-1111-1111-111111111111");
+    formData.append('user_id', UserId);
 
     // Make the API call
     const response = await axios.post(
-      `${ApiUrl}/doc-eval/upload-files`,
+      `${ApiUrl}/doc-eval/get-presigned-urls`,
       formData,
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
@@ -93,9 +93,11 @@ export const handleCreateRAG = async (
   
   try {
     // Make the API call to create RAG
-    const response = await axios.post(`${ApiUrl}/doc-eval/create-rag`, {
-      file_id: fileId,
-      user_id: "11111111-1111-1111-1111-111111111111"
+    const response = await axios.post(`${ApiUrl}/doc-eval/create-knowledge-base`, {
+      file_id_list: [fileId],
+      user_id: UserId,
+      thread_id: folderPath.split("/")[0],
+      upload_type: "file"
     });
 
     if (response.data.status === 'success') {
@@ -139,7 +141,7 @@ export const handleDeleteFile = async (
     const response = await axios.delete(`${ApiUrl}/doc-eval/delete-file`, {
       data: {
         file_id: fileId,
-        user_id: "11111111-1111-1111-1111-111111111111"
+        thread_id: folderPath.split("/")[0],
       }
     });
 
