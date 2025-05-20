@@ -2,13 +2,10 @@
 import { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import axios from 'axios';
-
-
-// Define ApiUrl here - in a real app, this would come from environment variables
-// const ApiUrl = 'https://api.example.com';
-const UserId = 'user123';
-
 import { ApiUrl } from '@/Constants';
+
+// Define UserId here - in a real app, this would come from environment variables
+const UserId = 'user123';
 
 export interface FileItem {
   folder_name: string;
@@ -46,7 +43,6 @@ export const useDocumentManager = () => {
     fetchFiles();
   }, []);
 
-
   const fetchFiles = async () => {
     setLoadingFiles(true);
     try {
@@ -54,9 +50,20 @@ export const useDocumentManager = () => {
       const data = response.data;
       if (data.status === 'success') {
         processFetchedData(data);
+      } else {
+        toast({ 
+          title: "Error", 
+          description: data.message || "Failed to fetch files", 
+          variant: "destructive" 
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching files:', error);
+      toast({ 
+        title: "Error", 
+        description: error.response?.data?.message || "Failed to fetch files", 
+        variant: "destructive" 
+      });
     } finally {
       setLoadingFiles(false);
     }
