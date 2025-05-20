@@ -90,7 +90,7 @@ const DocumentManager = () => {
             <Button 
               onClick={() => setParentFolderForChildFolder(null)}
               variant="outline"
-              className="border-gray-600 text-gray-300"
+              className="border-gray-600 text-black-300"
             >
               Cancel
             </Button>
