@@ -1,10 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
+import axios from 'axios';
+
 
 // Define ApiUrl here - in a real app, this would come from environment variables
-const ApiUrl = 'https://api.example.com';
+// const ApiUrl = 'https://api.example.com';
 const UserId = 'user123';
+
+import { ApiUrl } from '@/Constants';
 
 export interface FileItem {
   folder_name: string;
@@ -42,26 +46,20 @@ export const useDocumentManager = () => {
     fetchFiles();
   }, []);
 
-  // Simulated fetch function - in a real app, this would make an API call
+
   const fetchFiles = async () => {
     setLoadingFiles(true);
-    
-    // Simulated data - in production this would come from your API
-    setTimeout(() => {
-      const mockData = {
-        status: 'success',
-        data: [
-          { folder_name: 'Project A', file_id: 'file1', file_name: 'document1.pdf', rag_status: true },
-          { folder_name: 'Project A', file_id: 'file2', file_name: 'document2.pdf', rag_status: false },
-          { folder_name: 'Project B', file_id: 'file3', file_name: 'document3.pdf', rag_status: false },
-          { folder_name: 'Project B/Research', file_id: 'file4', file_name: 'research.pdf', rag_status: true },
-          { folder_name: 'Project C/Data/Results', file_id: 'file5', file_name: 'results.pdf', rag_status: false }
-        ]
-      };
-      
-      processFetchedData(mockData);
+    try {
+      const response = await axios.get(`${ApiUrl}/doc-eval/get-files-and-folders`);
+      const data = response.data;
+      if (data.status === 'success') {
+        processFetchedData(data);
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+    } finally {
       setLoadingFiles(false);
-    }, 1000);
+    }
   };
 
   const processFetchedData = (response: any) => {

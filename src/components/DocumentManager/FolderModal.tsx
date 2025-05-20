@@ -96,7 +96,7 @@ const FolderModal = ({
             onCreateChildFolder(folderPath);
           }}
           variant="outline"
-          className="border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700"
+          className="border-gray-600 text-white hover:text-black bg-gray-700 "
         >
           <Plus size={16} className="mr-1" /> Add Folder
         </Button>
