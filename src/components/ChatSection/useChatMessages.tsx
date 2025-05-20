@@ -203,6 +203,7 @@ export const useChatMessages = () => {
         setInputMessage,
         isLoading,
         setSelectedFileIds,
+        selectedFileIds,
         handleSubmit,
         chatContainerRef,
     };

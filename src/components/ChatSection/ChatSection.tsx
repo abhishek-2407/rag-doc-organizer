@@ -19,6 +19,7 @@ const ChatSection = () => {
         isLoading,
         handleSubmit,
         chatContainerRef,
+        setSelectedFileIds,
     } = useChatMessages();
 
     const {
@@ -29,6 +30,11 @@ const ChatSection = () => {
         openFolders,
         toggleFolder
     } = useFileSelection();
+
+    // Update the selected file IDs in the chat messages hook whenever they change in the file selection hook
+    useEffect(() => {
+        setSelectedFileIds(selectedFileIds);
+    }, [selectedFileIds, setSelectedFileIds]);
 
     return (
         <div className='chat-section'>
