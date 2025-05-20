@@ -2,15 +2,13 @@
 import { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import axios from 'axios';
-import { ApiUrl } from '@/Constants';
-
-// Define UserId here - in a real app, this would come from environment variables
-const UserId = 'user123';
+import { ApiUrl, UserId } from '@/Constants';
 
 export interface FileItem {
   folder_name: string;
   file_id: string;
   file_name: string;
+  s3_file_url?: string;
   rag_status: boolean;
 }
 
@@ -46,8 +44,10 @@ export const useDocumentManager = () => {
   const fetchFiles = async () => {
     setLoadingFiles(true);
     try {
+      // Use the same API endpoint as FolderManager component
       const response = await axios.get(`${ApiUrl}/doc-eval/get-files-and-folders`);
       const data = response.data;
+      
       if (data.status === 'success') {
         processFetchedData(data);
       } else {
@@ -79,6 +79,7 @@ export const useDocumentManager = () => {
         if (!folderMap[folderPath]) folderMap[folderPath] = [];
         folderMap[folderPath].push(file);
 
+        // Build folder structure
         const pathParts = folderPath.split('/');
         let currentLevel = structureMap;
         pathParts.forEach((part: string) => {

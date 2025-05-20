@@ -36,38 +36,51 @@ export const handleUploadDocuments = async (
   setLoadingUpload(prev => ({ ...prev, [folderPath]: true }));
 
   try {
-    // Create FormData for file upload
-    const formData = new FormData();
-    files.forEach(file => {
-      formData.append('files', file);
+    // Create payload format for the API
+    const payload = files.map(file => ({
+      fileName: file.name,
+      fileType: file.type
+    }));
+
+    // Make the API call with the correct format
+    const { data } = await axios.post(`${ApiUrl}/doc-eval/get-presigned-urls`, {
+      user_id: UserId,
+      files: payload,
+      folder_name: folderPath,
+      thread_id: folderPath.split('/')[0]
     });
-    formData.append('thread_id', folderPath);
-    formData.append('user_id', UserId);
 
-    // Make the API call
-    const response = await axios.post(
-      `${ApiUrl}/doc-eval/get-presigned-urls`,
-      formData,
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
+    if (data.status_code === 200) {
+      // Upload each file with presigned URL
+      const uploaded = await Promise.all(
+        data.urls.map(async (urlObj: any, index: number) => {
+          const file = files[index];
+          await axios.put(urlObj.presigned_url, file, {
+            headers: { 'Content-Type': file.type }
+          });
+          return {
+            file_name: file.name,
+            s3_file_url: urlObj.file_url,
+            file_id: urlObj.file_id,
+            folder_name: folderPath,
+            rag_status: false
+          };
+        })
+      );
 
-    if (response.data.status === 'success') {
-      // Get the uploaded files from the response and add them to the state
-      const uploadedFiles = response.data.data.map((file: any) => ({
-        file_name: file.file_name,
-        file_id: file.file_id,
-        folder_name: folderPath,
-        rag_status: false
-      }));
-
+      // Update UI state
       setFilesByFolder(prev => ({
         ...prev,
-        [folderPath]: [...(prev[folderPath] || []), ...uploadedFiles]
+        [folderPath]: [...(prev[folderPath] || []), ...uploaded]
       }));
       setPendingUploads(prev => ({ ...prev, [folderPath]: [] }));
       toast({ title: "Success", description: "Files uploaded successfully!" });
     } else {
-      toast({ title: "Error", description: response.data.message || "Upload failed", variant: "destructive" });
+      toast({ 
+        title: "Error", 
+        description: data.message || "Upload failed", 
+        variant: "destructive" 
+      });
     }
   } catch (error: any) {
     console.error("Error uploading files:", error);
@@ -92,15 +105,16 @@ export const handleCreateRAG = async (
   setLoadingRAG(prev => ({ ...prev, [fileId]: true }));
   
   try {
-    // Make the API call to create RAG
-    const response = await axios.post(`${ApiUrl}/doc-eval/create-knowledge-base`, {
+    // Make the API call to create RAG with the correct payload structure
+    const { data } = await axios.post(`${ApiUrl}/doc-eval/create-knowledge-base`, {
       file_id_list: [fileId],
-      user_id: UserId,
-      thread_id: folderPath.split("/")[0],
-      upload_type: "file"
+      thread_id: folderPath.split('/')[0],
+      upload_type: "file",
+      user_id: UserId
     });
 
-    if (response.data.status === 'success') {
+    if (data.status === 'success') {
+      // Update file status in UI
       const updated = filesByFolder[folderPath].map(file =>
         file.file_id === fileId ? { ...file, rag_status: true } : file
       );
@@ -110,7 +124,7 @@ export const handleCreateRAG = async (
     } else {
       toast({ 
         title: "Error", 
-        description: response.data.message || "Failed to create RAG", 
+        description: data.message || "Failed to create RAG", 
         variant: "destructive" 
       });
     }
@@ -137,22 +151,21 @@ export const handleDeleteFile = async (
   setLoadingDelete(prev => ({ ...prev, [fileId]: true }));
   
   try {
-    // Make the API call to delete the file
-    const response = await axios.delete(`${ApiUrl}/doc-eval/delete-file`, {
-      data: {
-        file_id: fileId,
-        thread_id: folderPath.split("/")[0],
-      }
+    // Make the API call to delete the file with the correct payload
+    const { data } = await axios.post(`${ApiUrl}/doc-eval/delete-file`, {
+      file_id: fileId,
+      thread_id: folderPath.split('/')[0]
     });
 
-    if (response.data.status === 'success') {
+    if (data.status === 200 || data.status === 'success') {
+      // Remove the file from UI
       const updated = filesByFolder[folderPath].filter(f => f.file_id !== fileId);
       setFilesByFolder(prev => ({ ...prev, [folderPath]: updated }));
       toast({ title: "Success", description: "File deleted successfully!" });
     } else {
       toast({ 
         title: "Error", 
-        description: response.data.message || "Failed to delete file", 
+        description: data.message || "Failed to delete file", 
         variant: "destructive" 
       });
     }
