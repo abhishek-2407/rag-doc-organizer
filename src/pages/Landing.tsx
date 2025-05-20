@@ -11,9 +11,9 @@ const Landing = () => {
         Welcome to <span className="text-pink-500">Document Evaluation Portal</span>
       </h1>
       
-      <p className="text-gray-400 max-w-md mb-10 text-lg">
+      {/* <p className="text-gray-400 max-w-md mb-10 text-lg">
         Organize, analyze and gain insights from your documents using our powerful RAG system
-      </p>
+      </p> */}
       
       <div className="flex flex-col sm:flex-row gap-4">
         <Link to="/documents">
