@@ -9,7 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   userEmail: string | null;
   userRole: string | null;
-  login: (token: string) => void;
+  login: (token: string, email?: string, role?: string) => void;
   logout: () => void;
   checkAuth: () => Promise<boolean>;
 }
@@ -18,17 +18,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(localStorage.getItem('user_email'));
+  const [userRole, setUserRole] = useState<string | null>(localStorage.getItem('user_role'));
   const navigate = useNavigate();
 
-  const login = (token: string) => {
+  const login = (token: string, email?: string, role?: string) => {
     localStorage.setItem('access_token', token);
+    
+    if (email) {
+      localStorage.setItem('user_email', email);
+      setUserEmail(email);
+    }
+    
+    if (role) {
+      localStorage.setItem('user_role', role);
+      setUserRole(role);
+    }
+    
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_role');
     setIsAuthenticated(false);
     setUserEmail(null);
     setUserRole(null);
@@ -51,8 +64,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.data && response.data.valid) {
         setIsAuthenticated(true);
-        setUserEmail(response.data.email);
-        setUserRole(response.data.role);
+        
+        // Store email and role in localStorage if received
+        if (response.data.email) {
+          localStorage.setItem('user_email', response.data.email);
+          setUserEmail(response.data.email);
+        }
+        
+        if (response.data.role) {
+          localStorage.setItem('user_role', response.data.role);
+          setUserRole(response.data.role);
+        }
+        
         return true;
       } else {
         logout();

@@ -32,6 +32,8 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       // Redirect to login or handle token refresh logic here
       localStorage.removeItem('access_token');
+      localStorage.removeItem('user_email');
+      localStorage.removeItem('user_role');
       window.location.href = '/login';
     }
     

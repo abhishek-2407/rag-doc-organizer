@@ -12,6 +12,7 @@ import axios from 'axios';
 import { ApiUrl } from '@/Constants';
 import { toast } from '@/components/ui/sonner';
 import { Lock, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -23,6 +24,7 @@ type FormValues = z.infer<typeof formSchema>;
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -41,8 +43,13 @@ const Login = () => {
       });
       
       if (response.data && response.data.access_token) {
-        // Store the token in localStorage
-        localStorage.setItem('access_token', response.data.access_token);
+        // Store the token in localStorage and context
+        login(
+          response.data.access_token,
+          values.email,
+          response.data.role || null
+        );
+        
         toast.success('Login successful!');
         navigate('/');
       } else {

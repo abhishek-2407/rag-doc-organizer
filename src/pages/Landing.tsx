@@ -6,7 +6,7 @@ import { File, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Landing = () => {
-  const { logout, userEmail } = useAuth();
+  const { logout, userEmail, userRole } = useAuth();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4 text-center">
@@ -27,12 +27,14 @@ const Landing = () => {
       </h1>
       
       <div className="flex flex-col sm:flex-row gap-4">
-        <Link to="/documents">
-          <Button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-6 text-lg">
-            <File className="mr-2 h-5 w-5" />
-            Upload Documents
-          </Button>
-        </Link>
+        {userRole === 'admin' && (
+          <Link to="/documents">
+            <Button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-6 text-lg">
+              <File className="mr-2 h-5 w-5" />
+              Upload Documents
+            </Button>
+          </Link>
+        )}
         <Link to="/insights">
           <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-6 text-lg">
             Get Insights
