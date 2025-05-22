@@ -23,7 +23,19 @@ export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
         tbody: ({ node, ...props }: any) => <tbody className="markdown-tbody" {...props} />,
         tr: ({ node, ...props }: any) => <tr className="markdown-tr" {...props} />,
         th: ({ node, ...props }: any) => <th className="markdown-th" {...props} />,
-        td: ({ node, ...props }: any) => <td className="markdown-td" {...props} />
+        td: ({ node, ...props }: any) => <td className="markdown-td" {...props} />,
+        p: ({ node, ...props }: any) => <p className="markdown-paragraph" {...props} />,
+        h1: ({ node, ...props }: any) => <h1 className="markdown-heading markdown-h1" {...props} />,
+        h2: ({ node, ...props }: any) => <h2 className="markdown-heading markdown-h2" {...props} />,
+        h3: ({ node, ...props }: any) => <h3 className="markdown-heading markdown-h3" {...props} />,
+        h4: ({ node, ...props }: any) => <h4 className="markdown-heading markdown-h4" {...props} />,
+        h5: ({ node, ...props }: any) => <h5 className="markdown-heading markdown-h5" {...props} />,
+        h6: ({ node, ...props }: any) => <h6 className="markdown-heading markdown-h6" {...props} />,
+        hr: ({ node, ...props }: any) => <hr className="markdown-hr" {...props} />,
+        ul: ({ node, ...props }: any) => <ul className="markdown-ul" {...props} />,
+        ol: ({ node, ...props }: any) => <ol className="markdown-ol" {...props} />,
+        li: ({ node, ...props }: any) => <li className="markdown-li" {...props} />,
+        blockquote: ({ node, ...props }: any) => <blockquote className="markdown-blockquote" {...props} />,
     };
 
     return (
