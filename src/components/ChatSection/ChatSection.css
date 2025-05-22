@@ -91,6 +91,11 @@
   gap: 16px;
 }
 
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .message {
   display: flex;
   max-width: 80%;
@@ -186,13 +191,13 @@ svg {
 
 .table-container {
   overflow-x: auto;
-  margin: 15px 0;
+  margin: 15px 0px;
 }
 
 .markdown-table {
   border-collapse: collapse;
   width: 100%;
-  margin: 10px 0;
+  margin: 10px 0px;
   font-size: 14px;
 }
 

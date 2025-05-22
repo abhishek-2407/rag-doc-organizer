@@ -5,6 +5,8 @@ import remarkGfm from 'remark-gfm';
 import remarkGemoji from "remark-gemoji";
 import { Message } from './useChatMessages';
 import { PulseLoader } from './PulseLoader';
+import './ChatSection.css';
+
 
 interface MessageListProps {
     messages: Message[];
