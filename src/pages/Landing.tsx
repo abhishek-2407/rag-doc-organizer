@@ -2,18 +2,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { File } from 'lucide-react';
+import { File, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Landing = () => {
+  const { logout, userEmail } = useAuth();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4 text-center">
+      <div className="absolute top-4 right-4 flex items-center gap-4">
+        {userEmail && <span className="text-white text-sm">Logged in as: {userEmail}</span>}
+        <Button 
+          variant="ghost" 
+          className="text-white hover:text-pink-500"
+          onClick={logout}
+        >
+          <LogOut className="h-5 w-5 mr-1" />
+          Logout
+        </Button>
+      </div>
+
       <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
         Welcome to <span className="text-pink-500">Document Evaluation Portal</span>
       </h1>
-      
-      {/* <p className="text-gray-400 max-w-md mb-10 text-lg">
-        Organize, analyze and gain insights from your documents using our powerful RAG system
-      </p> */}
       
       <div className="flex flex-col sm:flex-row gap-4">
         <Link to="/documents">
