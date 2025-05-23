@@ -69,16 +69,16 @@ const Login = () => {
         {userRole === 'super_admin' && (
           <Button
             variant="outline"
-            className="bg-transparent hover:bg-pink-600 hover:text-white"
+            className="bg-white hover:bg-pink-600 hover:text-white"
             onClick={() => navigate('/invite')}
           >
-            <UserPlus className="mr-2 h-4 w-4" />
+            <UserPlus className="mr-2 h-4 w-4 text-black hover:text-white" />
             Invite User
           </Button>
         )}
         <Button 
           variant="outline"
-          className="bg-transparent hover:bg-pink-600 hover:text-white"
+          className="bg-white hover:bg-pink-600 hover:text-white"
           onClick={() => navigate('/register')}
         >
           Register
