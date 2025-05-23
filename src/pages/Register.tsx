@@ -49,14 +49,28 @@ const Register = () => {
           response.data.role || null
         );
         
-        toast.success('Registration successful!');
+        toast.success('Registration successful! Welcome aboard!');
         navigate('/');
       } else {
         toast.error('Invalid registration response');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      toast.error('Registration failed. Please check your information and try again.');
+      
+      // Handle specific error messages from the API
+      if (error.response && error.response.data && error.response.data.detail) {
+        const errorDetail = error.response.data.detail;
+        
+        if (errorDetail === "Email is not invited to register") {
+          toast.error('Your email is not invited to register. Please contact an administrator for an invitation.');
+        } else if (errorDetail === "Email already registered") {
+          toast.error('This email is already registered. Please try logging in instead.');
+        } else {
+          toast.error(`Registration failed: ${errorDetail}`);
+        }
+      } else {
+        toast.error('Registration failed. Please check your information and try again.');
+      }
     } finally {
       setIsLoading(false);
     }
