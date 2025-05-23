@@ -11,20 +11,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { ApiUrl } from '@/Constants';
 import { toast } from '@/components/ui/sonner';
-import { Lock, User, UserPlus } from 'lucide-react';
+import { Lock, Mail } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-const Login = () => {
+const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, userRole } = useAuth();
+  const { login } = useAuth();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -37,27 +37,26 @@ const Login = () => {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${ApiUrl}/auth/login`, {
+      const response = await axios.post(`${ApiUrl}/auth/register`, {
         email: values.email,
         password: values.password
       });
       
       if (response.data && response.data.access_token) {
-        // Store the token in localStorage and context
         login(
           response.data.access_token,
           values.email,
           response.data.role || null
         );
         
-        toast.success('Login successful!');
+        toast.success('Registration successful!');
         navigate('/');
       } else {
-        toast.error('Invalid login response');
+        toast.error('Invalid registration response');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Login failed. Please check your credentials and try again.');
+      console.error('Registration error:', error);
+      toast.error('Registration failed. Please check your information and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -65,30 +64,10 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
-      <div className="absolute top-4 right-4 flex items-center gap-4">
-        {userRole === 'super_admin' && (
-          <Button
-            variant="outline"
-            className="bg-transparent hover:bg-pink-600 hover:text-white"
-            onClick={() => navigate('/invite')}
-          >
-            <UserPlus className="mr-2 h-4 w-4" />
-            Invite User
-          </Button>
-        )}
-        <Button 
-          variant="outline"
-          className="bg-transparent hover:bg-pink-600 hover:text-white"
-          onClick={() => navigate('/register')}
-        >
-          Register
-        </Button>
-      </div>
-
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Document Evaluation Portal</CardTitle>
-          <CardDescription>Enter your credentials to login</CardDescription>
+          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+          <CardDescription>Register to access the document evaluation portal</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -101,7 +80,7 @@ const Login = () => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <User className="ml-2 h-4 w-4 text-muted-foreground" />
+                        <Mail className="ml-2 h-4 w-4 text-muted-foreground" />
                         <Input placeholder="Enter your email" className="border-0 focus-visible:ring-0" {...field} />
                       </div>
                     </FormControl>
@@ -118,7 +97,7 @@ const Login = () => {
                     <FormControl>
                       <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
                         <Lock className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input type="password" placeholder="Enter your password" className="border-0 focus-visible:ring-0" {...field} />
+                        <Input type="password" placeholder="Create password" className="border-0 focus-visible:ring-0" {...field} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -126,16 +105,16 @@ const Login = () => {
                 )}
               />
               <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+                {isLoading ? 'Registering...' : 'Register'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Button variant="link" className="p-0" onClick={() => navigate('/register')}>
-              Register
+            Already have an account?{' '}
+            <Button variant="link" className="p-0" onClick={() => navigate('/login')}>
+              Login
             </Button>
           </p>
         </CardFooter>
@@ -144,4 +123,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

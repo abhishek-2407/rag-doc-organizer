@@ -9,6 +9,8 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Section from "./pages/Section";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Invite from "./pages/Invite";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -23,6 +25,8 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/invite" element={<Invite />} />
             <Route path="/" element={
               <ProtectedRoute>
                 <Landing />
