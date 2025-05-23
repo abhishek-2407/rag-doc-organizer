@@ -67,6 +67,15 @@ const Invite = () => {
     }
   };
 
+  // If not super_admin, show loading until redirect happens
+  if (userRole !== 'super_admin') {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
       <Card className="w-full max-w-md">
@@ -127,8 +136,8 @@ const Invite = () => {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="link" onClick={() => navigate('/login')}>
-            Back to Login
+          <Button variant="link" onClick={() => navigate('/')}>
+            Back to Home
           </Button>
         </CardFooter>
       </Card>

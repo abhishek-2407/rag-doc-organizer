@@ -1,17 +1,37 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { File, LogOut } from 'lucide-react';
+import { File, LogOut, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/components/ui/sonner';
 
 const Landing = () => {
   const { logout, userEmail, userRole } = useAuth();
+  const navigate = useNavigate();
+
+  const handleInviteClick = () => {
+    if (userRole !== 'super_admin') {
+      toast.error('Only super admins can invite users');
+      return;
+    }
+    navigate('/invite');
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4 text-center">
       <div className="absolute top-4 right-4 flex items-center gap-4">
         {userEmail && <span className="text-white text-sm">Logged in as: {userEmail}</span>}
+        {userRole === 'super_admin' && (
+          <Button
+            variant="outline"
+            className="bg-white hover:bg-pink-600 hover:text-white"
+            onClick={handleInviteClick}
+          >
+            <UserPlus className="mr-2 h-4 w-4" />
+            Invite User
+          </Button>
+        )}
         <Button 
           variant="ghost" 
           className="text-white hover:text-pink-500"

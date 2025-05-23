@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { ApiUrl } from '@/Constants';
 import { toast } from '@/components/ui/sonner';
-import { Lock, User, UserPlus } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const formSchema = z.object({
@@ -65,17 +65,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
-      <div className="absolute top-4 right-4 flex items-center gap-4">
-        {userRole === 'super_admin' && (
-          <Button
-            variant="outline"
-            className="bg-white hover:bg-pink-600 hover:text-white"
-            onClick={() => navigate('/invite')}
-          >
-            <UserPlus className="mr-2 h-4 w-4 text-black hover:text-white" />
-            Invite User
-          </Button>
-        )}
+      <div className="absolute top-4 right-4">
         <Button 
           variant="outline"
           className="bg-white hover:bg-pink-600 hover:text-white"
