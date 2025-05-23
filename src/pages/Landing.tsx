@@ -28,7 +28,6 @@ const Landing = () => {
             className="bg-white hover:bg-pink-600 hover:text-white"
             onClick={handleInviteClick}
           >
-            <UserPlus className="mr-2 h-4 w-4" />
             Invite User
           </Button>
         )}
