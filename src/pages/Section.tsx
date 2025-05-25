@@ -4,7 +4,7 @@ import ChatSection from '@/components/ChatSection/ChatSection';
 
 const Section = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
+    <div className="min-h-screen bg-gray-900">
       <ChatSection />
     </div>
   );
