@@ -64,21 +64,21 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 px-4">
       <div className="absolute top-4 right-4">
         <Button 
           variant="outline"
-          className="bg-white hover:bg-pink-600 hover:text-white"
+          className="bg-transparent border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition-all duration-300"
           onClick={() => navigate('/register')}
         >
           Register
         </Button>
       </div>
 
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-gray-800/50 backdrop-blur-lg border-gray-700 shadow-2xl">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Document Evaluation Portal</CardTitle>
-          <CardDescription>Enter your credentials to login</CardDescription>
+          <CardTitle className="text-2xl font-bold text-white">Document Evaluation Portal</CardTitle>
+          <CardDescription className="text-gray-300">Enter your credentials to login</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -88,14 +88,14 @@ const Login = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-gray-300">Email</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <User className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Enter your email" className="border-0 focus-visible:ring-0" {...field} />
+                      <div className="flex items-center border border-gray-600 rounded-md focus-within:ring-2 focus-within:ring-pink-500 focus-within:border-pink-500 bg-gray-700/50 transition-all duration-300">
+                        <User className="ml-2 h-4 w-4 text-gray-400" />
+                        <Input placeholder="Enter your email" className="border-0 focus-visible:ring-0 bg-transparent text-white placeholder-gray-400" {...field} />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -104,27 +104,27 @@ const Login = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-gray-300">Password</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <Lock className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input type="password" placeholder="Enter your password" className="border-0 focus-visible:ring-0" {...field} />
+                      <div className="flex items-center border border-gray-600 rounded-md focus-within:ring-2 focus-within:ring-pink-500 focus-within:border-pink-500 bg-gray-700/50 transition-all duration-300">
+                        <Lock className="ml-2 h-4 w-4 text-gray-400" />
+                        <Input type="password" placeholder="Enter your password" className="border-0 focus-visible:ring-0 bg-transparent text-white placeholder-gray-400" {...field} />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105" disabled={isLoading}>
                 {isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-400">
             Don't have an account?{' '}
-            <Button variant="link" className="p-0" onClick={() => navigate('/register')}>
+            <Button variant="link" className="p-0 text-pink-500 hover:text-pink-400" onClick={() => navigate('/register')}>
               Register
             </Button>
           </p>

@@ -77,11 +77,11 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 px-4">
+      <Card className="w-full max-w-md bg-gray-800/50 backdrop-blur-lg border-gray-700 shadow-2xl">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-          <CardDescription>Register to access the document evaluation portal</CardDescription>
+          <CardTitle className="text-2xl font-bold text-white">Create Account</CardTitle>
+          <CardDescription className="text-gray-300">Register to access the document evaluation portal</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -91,14 +91,14 @@ const Register = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-gray-300">Email</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <Mail className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Enter your email" className="border-0 focus-visible:ring-0" {...field} />
+                      <div className="flex items-center border border-gray-600 rounded-md focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 bg-gray-700/50 transition-all duration-300">
+                        <Mail className="ml-2 h-4 w-4 text-gray-400" />
+                        <Input placeholder="Enter your email" className="border-0 focus-visible:ring-0 bg-transparent text-white placeholder-gray-400" {...field} />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -107,27 +107,27 @@ const Register = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-gray-300">Password</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <Lock className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input type="password" placeholder="Create password" className="border-0 focus-visible:ring-0" {...field} />
+                      <div className="flex items-center border border-gray-600 rounded-md focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 bg-gray-700/50 transition-all duration-300">
+                        <Lock className="ml-2 h-4 w-4 text-gray-400" />
+                        <Input type="password" placeholder="Create password" className="border-0 focus-visible:ring-0 bg-transparent text-white placeholder-gray-400" {...field} />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105" disabled={isLoading}>
                 {isLoading ? 'Registering...' : 'Register'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-400">
             Already have an account?{' '}
-            <Button variant="link" className="p-0" onClick={() => navigate('/login')}>
+            <Button variant="link" className="p-0 text-indigo-500 hover:text-indigo-400" onClick={() => navigate('/login')}>
               Login
             </Button>
           </p>

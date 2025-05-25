@@ -70,18 +70,23 @@ const Invite = () => {
   // If not super_admin, show loading until redirect happens
   if (userRole !== 'super_admin') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-pink-900 to-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-pink-900 to-gray-900 px-4">
+      <Card className="w-full max-w-md bg-gray-800/50 backdrop-blur-lg border-gray-700 shadow-2xl">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Invite User</CardTitle>
-          <CardDescription>Send invitation to a new user</CardDescription>
+          <div className="flex justify-center mb-4">
+            <div className="p-3 bg-pink-600/20 rounded-full">
+              <UserPlus className="h-8 w-8 text-pink-500" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold text-white">Invite User</CardTitle>
+          <CardDescription className="text-gray-300">Send invitation to a new user</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -91,14 +96,14 @@ const Invite = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-gray-300">Email</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 bg-transparent">
-                        <Mail className="ml-2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Enter user email" className="border-0 focus-visible:ring-0" {...field} />
+                      <div className="flex items-center border border-gray-600 rounded-md focus-within:ring-2 focus-within:ring-pink-500 focus-within:border-pink-500 bg-gray-700/50 transition-all duration-300">
+                        <Mail className="ml-2 h-4 w-4 text-gray-400" />
+                        <Input placeholder="Enter user email" className="border-0 focus-visible:ring-0 bg-transparent text-white placeholder-gray-400" {...field} />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -108,35 +113,35 @@ const Invite = () => {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel className="text-gray-300">Role</FormLabel>
                     <Select 
                       onValueChange={field.onChange} 
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-gray-700/50 border-gray-600 text-white focus:ring-pink-500 focus:border-pink-500">
                           <SelectValue placeholder="Select user role" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="super_admin">Super Admin</SelectItem>
+                      <SelectContent className="bg-gray-800 border-gray-700">
+                        <SelectItem value="user" className="text-white hover:bg-gray-700">User</SelectItem>
+                        <SelectItem value="admin" className="text-white hover:bg-gray-700">Admin</SelectItem>
+                        <SelectItem value="super_admin" className="text-white hover:bg-gray-700">Super Admin</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
               
-              <Button type="submit" className="w-full bg-pink-600 hover:bg-pink-700" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-semibold transition-all duration-300 transform hover:scale-105" disabled={isLoading}>
                 {isLoading ? 'Sending...' : 'Send Invitation'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="link" onClick={() => navigate('/')}>
+          <Button variant="link" className="text-pink-500 hover:text-pink-400" onClick={() => navigate('/')}>
             Back to Home
           </Button>
         </CardFooter>
