@@ -7,7 +7,7 @@
   --text-muted: #a0a0a0;
   --bg-dark: #111827;
   --bg-darker: #0c121d;
-  --bg-lighter: #1e1e1e;
+  --bg-lighter: #1b2639;
   --bg-message-user: #172034;
   --bg-message-system: #172034;
   --border-color: #333333;
@@ -297,7 +297,7 @@ input {
 }
 
 .folder-header:hover {
-  background-color: #333333;
+  background-color: var(--bg-lighter);
 }
 
 .folder-name {
