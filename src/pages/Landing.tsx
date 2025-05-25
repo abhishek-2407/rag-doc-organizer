@@ -19,21 +19,22 @@ const Landing = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 px-4 text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 px-4 text-center">
       <div className="absolute top-4 right-4 flex items-center gap-4">
         {userEmail && <span className="text-white text-sm">Logged in as: {userEmail}</span>}
         {userRole === 'super_admin' && (
           <Button
             variant="outline"
-            className="bg-white hover:bg-pink-600 hover:text-white"
+            className="bg-transparent border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white transition-all duration-300"
             onClick={handleInviteClick}
           >
+            <UserPlus className="h-4 w-4 mr-2" />
             Invite User
           </Button>
         )}
         <Button 
           variant="ghost" 
-          className="text-white hover:text-pink-500"
+          className="text-white hover:text-pink-500 hover:bg-white/10 transition-all duration-300"
           onClick={logout}
         >
           <LogOut className="h-5 w-5 mr-1" />
@@ -41,24 +42,30 @@ const Landing = () => {
         </Button>
       </div>
 
-      <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-        Welcome to <span className="text-pink-500">Document Evaluation Portal</span>
-      </h1>
-      
-      <div className="flex flex-col sm:flex-row gap-4">
-        {userRole === 'admin' || userRole === 'super_admin' ? (
-          <Link to="/documents">
-            <Button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-6 text-lg">
-              <File className="mr-2 h-5 w-5" />
-              Upload Documents
+      <div className="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-lg p-8 shadow-2xl max-w-2xl w-full">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Document Evaluation Portal</span>
+        </h1>
+        
+        <p className="text-gray-300 text-lg mb-8">
+          Streamline your document management and analysis workflow
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {userRole === 'admin' || userRole === 'super_admin' ? (
+            <Link to="/documents">
+              <Button className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+                <File className="mr-2 h-5 w-5" />
+                Upload Documents
+              </Button>
+            </Link>
+          ) : null}
+          <Link to="/insights">
+            <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+              Get Insights
             </Button>
           </Link>
-        ) : null}
-        <Link to="/insights">
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-6 text-lg">
-            Get Insights
-          </Button>
-        </Link>
+        </div>
       </div>
     </div>
   );
