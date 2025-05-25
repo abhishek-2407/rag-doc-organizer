@@ -72,7 +72,7 @@ const ChatSection = () => {
                                 onChange={(e) => setInputMessage(e.target.value)}
                                 placeholder="Type your message..."
                                 disabled={isLoading}
-                                className="chat-input-field"
+                                className="bg-gray-800 text-white border-gray-600"
                             />
                             <Button 
                                 type="submit" 
