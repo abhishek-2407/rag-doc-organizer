@@ -25,7 +25,7 @@ const Landing = () => {
         {userRole === 'super_admin' && (
           <Button
             variant="outline"
-            className="bg-transparent border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300"
+            className="bg-transparent border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-300"
             onClick={handleInviteClick}
           >
             <UserPlus className="h-4 w-4 mr-2" />
@@ -42,19 +42,16 @@ const Landing = () => {
         </Button>
       </div>
 
-      <div className="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-lg p-8 shadow-2xl max-w-2xl w-full">
+      {/* <div className="bg-gray-800/50 backdrop-blur-lg border border-gray-700 rounded-lg p-8 shadow-2xl max-w-2xl w-full"> */}
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-          Welcome to <span className="text-purple-500">Document Evaluation Portal</span>
+          Welcome to <span className="text-pink-600">Document Evaluation Portal</span>
         </h1>
         
-        <p className="text-gray-300 text-lg mb-8">
-          Streamline your document management and analysis workflow
-        </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           {userRole === 'admin' || userRole === 'super_admin' ? (
             <Link to="/documents">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+              <Button className="bg-pink-600 hover:bg-pink-800 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
                 <File className="mr-2 h-5 w-5" />
                 Upload Documents
               </Button>
@@ -66,7 +63,7 @@ const Landing = () => {
             </Button>
           </Link>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

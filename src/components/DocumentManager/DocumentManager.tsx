@@ -45,7 +45,7 @@ const DocumentManager = () => {
   return (
     <div className="container py-8 max-w-screen-xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 text-pink-500">Document Manager</h1>
+        <h1 className="text-4xl font-bold mb-4 text-pink-600">Document Manager</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
           Organize your documents in folders, create RAG knowledge bases, and manage your files efficiently.
         </p>
@@ -100,7 +100,7 @@ const DocumentManager = () => {
 
       {loadingFiles ? (
         <div className="text-center p-12">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-pink-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-pink-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
           <p className="mt-4 text-gray-400">Loading folders and files...</p>
         </div>
       ) : Object.keys(folderStructure).length === 0 ? (
