@@ -34,7 +34,33 @@
   padding: 20px;
   overflow-y: auto;
   border-radius: 30px;
-  background-color: var(--bg-darker) ;
+  background-color: var(--bg-darker);
+}
+
+/* Custom scrollbar for left panel - matching the right panel style */
+.left-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* For Firefox */
+.left-panel {
+  scrollbar-width: thin;
+  scrollbar-color: #374151 transparent;
 }
 
 .left-panel h3 {
