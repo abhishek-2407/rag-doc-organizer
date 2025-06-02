@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/sonner';
-import { FileText, Loader2, Download } from 'lucide-react';
+import { FileText, Loader2, Download, Trash2 } from 'lucide-react';
 import { useFileSelection } from '../ChatSection/useFileSelection';
 import { ApiUrl, UserId } from '@/Constants';
 
@@ -29,6 +28,7 @@ export const DeepInsightsModal: React.FC<DeepInsightsModalProps> = ({ isOpen, on
   const [isGenerating, setIsGenerating] = useState(false);
   const [summaryFiles, setSummaryFiles] = useState<SummaryFile[]>([]);
   const [isLoadingSummaries, setIsLoadingSummaries] = useState(false);
+  const [deletingFileId, setDeletingFileId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -107,6 +107,28 @@ export const DeepInsightsModal: React.FC<DeepInsightsModalProps> = ({ isOpen, on
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleDeleteSummary = async (fileName: string, fileId: string) => {
+    setDeletingFileId(fileId);
+    
+    try {
+      const response = await fetch(`${ApiUrl}/doc-eval/delete-summary-file?file_key=${encodeURIComponent(fileName)}&user_id=${UserId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.status === 200) {
+        toast.success('Summary file deleted successfully!');
+        fetchSummaryFiles(); // Refresh the summary files list
+      } else {
+        toast.error('Error deleting summary file');
+      }
+    } catch (error) {
+      console.error('Error deleting summary file:', error);
+      toast.error('Failed to delete summary file');
+    } finally {
+      setDeletingFileId(null);
+    }
   };
 
   return (
@@ -222,16 +244,31 @@ export const DeepInsightsModal: React.FC<DeepInsightsModalProps> = ({ isOpen, on
                           </p>
                         </div>
                       </div>
-                      {summaryFile.status === 'completed' && (
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {summaryFile.status === 'completed' && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDownload(summaryFile.s3_url, summaryFile.file_name)}
+                            className="text-pink-400 hover:text-pink-300 hover:bg-pink-400/10"
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => handleDownload(summaryFile.s3_url, summaryFile.file_name)}
-                          className="text-pink-400 hover:text-pink-300 hover:bg-pink-400/10 flex-shrink-0"
+                          onClick={() => handleDeleteSummary(summaryFile.file_name, summaryFile.file_id)}
+                          disabled={deletingFileId === summaryFile.file_id}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
                         >
-                          <Download className="h-4 w-4" />
+                          {deletingFileId === summaryFile.file_id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
                         </Button>
-                      )}
+                      </div>
                     </div>
                   ))
                 )}
