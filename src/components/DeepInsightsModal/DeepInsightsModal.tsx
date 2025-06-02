@@ -75,7 +75,7 @@ export const DeepInsightsModal: React.FC<DeepInsightsModalProps> = ({ isOpen, on
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          thread_id: 'testing',
+          thread_id: 'generated-summary-file',
           file_id_list: selectedFileIds,
           file_name: fileName.trim(),
           user_id: UserId
