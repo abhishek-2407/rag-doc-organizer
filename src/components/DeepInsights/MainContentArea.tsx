@@ -1,8 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, FileIcon } from 'lucide-react';
-import { GeneratedSummariesPanel } from './GeneratedSummariesPanel';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { BookOpen, FileIcon, FileText, Download, Trash2, Loader2 } from 'lucide-react';
 import { SectionsDisplayPanel } from './SectionsDisplayPanel';
 
 interface Section {
@@ -42,17 +44,97 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
   onDownload,
   onDeleteSummary,
 }) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   return (
     <div className="flex-1 flex flex-col h-full">
-      {/* Generated Summaries Panel - Top Right */}
-      <GeneratedSummariesPanel
-        summaryFiles={summaryFiles}
-        isLoadingSummaries={isLoadingSummaries}
-        deletingFileId={deletingFileId}
-        onRefreshSummaries={onRefreshSummaries}
-        onDownload={onDownload}
-        onDeleteSummary={onDeleteSummary}
-      />
+      {/* Generated Summaries Button - Top Right */}
+      <div className="p-6 pb-0 flex justify-end">
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+            >
+              <FileIcon className="h-4 w-4 mr-2" />
+              Generated Summaries ({summaryFiles.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-96 bg-gray-800 border-gray-700" align="end">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-white font-semibold">Generated Summaries</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onRefreshSummaries}
+                  disabled={isLoadingSummaries}
+                  className="text-gray-400 hover:text-white text-xs"
+                >
+                  {isLoadingSummaries ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    'Refresh'
+                  )}
+                </Button>
+              </div>
+              <ScrollArea className="h-64">
+                <div className="space-y-2 pr-2">
+                  {summaryFiles.length === 0 ? (
+                    <div className="text-gray-400 text-center py-4 text-sm">
+                      No summaries found
+                    </div>
+                  ) : (
+                    summaryFiles.map((summaryFile, index) => (
+                      <div
+                        key={`${summaryFile.file_id}-${index}`}
+                        className="bg-gray-700 rounded-lg p-3"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText size={14} className="text-gray-400 flex-shrink-0" />
+                          <p className="text-white text-xs font-medium truncate flex-1" title={summaryFile.file_name}>
+                            {summaryFile.file_name}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <p className={`text-xs ${summaryFile.status === 'completed' ? 'text-green-400' : 'text-yellow-400'}`}>
+                            {summaryFile.status}
+                          </p>
+                          <div className="flex items-center gap-1">
+                            {summaryFile.status === 'completed' && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => onDownload(summaryFile.s3_url, summaryFile.file_name)}
+                                className="text-pink-400 hover:text-pink-300 hover:bg-pink-400/10 h-6 w-6 p-0"
+                              >
+                                <Download className="h-3 w-3" />
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => onDeleteSummary(summaryFile.file_name, summaryFile.file_id)}
+                              disabled={deletingFileId === summaryFile.file_id}
+                              className="text-red-400 hover:text-red-300 hover:bg-red-400/10 h-6 w-6 p-0"
+                            >
+                              {deletingFileId === summaryFile.file_id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-3 w-3" />
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
 
       {/* Document Sections Analysis - Bottom */}
       <div className="flex-1 p-6 pt-0">
