@@ -11,6 +11,7 @@ import Section from "./pages/Section";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Invite from "./pages/Invite";
+import DeepInsights from "./pages/DeepInsights";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -40,6 +41,11 @@ const App = () => (
             <Route path="/insights" element={
               <ProtectedRoute>
                 <Section />
+              </ProtectedRoute>
+            } />
+            <Route path="/deep-insights" element={
+              <ProtectedRoute>
+                <DeepInsights />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

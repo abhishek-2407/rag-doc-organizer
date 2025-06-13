@@ -1,16 +1,14 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { File, LogOut, UserPlus, FileText } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/sonner';
-import { DeepInsightsModal } from '@/components/DeepInsightsModal/DeepInsightsModal';
 
 const Landing = () => {
   const { logout, userEmail, userRole } = useAuth();
   const navigate = useNavigate();
-  const [isDeepInsightsOpen, setIsDeepInsightsOpen] = useState(false);
 
   const handleInviteClick = () => {
     if (userRole !== 'super_admin') {
@@ -64,19 +62,13 @@ const Landing = () => {
           </Button>
         </Link>
 
-        <Button 
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg"
-          onClick={() => setIsDeepInsightsOpen(true)}
-        >
-          <FileText className="mr-2 h-5 w-5" />
-          Deep Insights
-        </Button>
+        <Link to="/deep-insights">
+          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+            <FileText className="mr-2 h-5 w-5" />
+            Deep Insights
+          </Button>
+        </Link>
       </div>
-
-      <DeepInsightsModal 
-        isOpen={isDeepInsightsOpen} 
-        onClose={() => setIsDeepInsightsOpen(false)} 
-      />
     </div>
   );
 };
