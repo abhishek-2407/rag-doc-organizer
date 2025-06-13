@@ -179,145 +179,134 @@ const DeepInsights = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-900 flex">
+      {/* Left Sidebar */}
+      <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link to="/">
-              <Button variant="ghost" className="text-white hover:text-purple-500">
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-            <h1 className="text-3xl font-bold text-white">Deep Insights</h1>
-          </div>
+        <div className="p-4 border-b border-gray-700">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="text-white hover:text-purple-500 mb-2">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back
+            </Button>
+          </Link>
+          <h1 className="text-xl font-bold text-white">Deep Insights</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* File Selection Panel */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white">Select Files</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <ScrollArea className="h-96 p-4">
-                <div className="space-y-2">
-                  {files.map((file) => (
-                    <div
-                      key={file.file_id}
-                      className="flex items-start gap-3 p-2 rounded hover:bg-gray-700 transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        className="accent-pink-600 mt-1 flex-shrink-0"
-                        checked={selectedFileIds.includes(file.file_id)}
-                        onChange={() => toggleFileSelection(file.file_id)}
-                      />
-                      <FileText size={16} className="text-gray-400 flex-shrink-0 mt-0.5" />
-                      <span className="text-white text-sm break-words leading-relaxed">
-                        {file.file_name.split('/').pop()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="p-4 border-t border-gray-700">
-                <div className="text-sm text-gray-400">
-                  {selectedFileIds.length} file(s) selected
-                </div>
+        {/* File Selection */}
+        <div className="flex-1 flex flex-col">
+          <div className="p-4 border-b border-gray-700">
+            <h3 className="text-white font-semibold mb-3">Select Documents</h3>
+            <ScrollArea className="h-64">
+              <div className="space-y-2">
+                {files.map((file) => (
+                  <div
+                    key={file.file_id}
+                    className="flex items-start gap-2 p-2 rounded hover:bg-gray-700 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      className="accent-pink-600 mt-1 flex-shrink-0"
+                      checked={selectedFileIds.includes(file.file_id)}
+                      onChange={() => toggleFileSelection(file.file_id)}
+                    />
+                    <FileText size={14} className="text-gray-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-white text-xs break-words leading-relaxed">
+                      {file.file_name.split('/').pop()}
+                    </span>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
+            </ScrollArea>
+            <div className="text-xs text-gray-400 mt-2">
+              {selectedFileIds.length} file(s) selected
+            </div>
+          </div>
 
-          {/* Summary Generation Panel */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white">Generate Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          {/* Summary Generation */}
+          <div className="p-4 border-b border-gray-700">
+            <h3 className="text-white font-semibold mb-3">Generate Summary</h3>
+            <div className="space-y-3">
               <div>
-                <Label htmlFor="fileName" className="text-white">File Name</Label>
+                <Label htmlFor="fileName" className="text-white text-sm">File Name</Label>
                 <Input
                   id="fileName"
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
                   placeholder="Enter summary file name"
-                  className="bg-gray-700 border-gray-600 text-white mt-2"
+                  className="bg-gray-700 border-gray-600 text-white mt-1 text-sm"
                 />
               </div>
 
               <Button
                 onClick={handleGenerateSummary}
                 disabled={isGenerating || !fileName.trim() || selectedFileIds.length === 0}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 text-sm"
               >
                 {isGenerating ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
                     Generating...
                   </>
                 ) : (
                   <>
-                    <FileText className="mr-2 h-4 w-4" />
-                    Generate Summary Doc
+                    <FileText className="mr-2 h-3 w-3" />
+                    Generate Summary
                   </>
                 )}
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Summary Files List Panel */}
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-white">Generated Summaries</CardTitle>
+          {/* Generated Summaries */}
+          <div className="flex-1 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-white font-semibold">Generated Summaries</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={fetchSummaryFiles}
                 disabled={isLoadingSummaries}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white text-xs"
               >
                 {isLoadingSummaries ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
                   'Refresh'
                 )}
               </Button>
-            </CardHeader>
-            <CardContent className="p-0">
-              <ScrollArea className="h-96 p-4">
-                <div className="space-y-3">
-                  {summaryFiles.length === 0 ? (
-                    <div className="text-gray-400 text-center py-8">
-                      No summary files found
-                    </div>
-                  ) : (
-                    summaryFiles.map((summaryFile, index) => (
-                      <div
-                        key={`${summaryFile.file_id}-${index}`}
-                        className="flex items-center justify-between p-3 bg-gray-700 rounded-lg"
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <FileText size={16} className="text-gray-400 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-white text-sm font-medium truncate" title={summaryFile.file_name}>
-                              {summaryFile.file_name}
-                            </p>
-                            <p className={`text-xs ${summaryFile.status === 'completed' ? 'text-green-400' : 'text-yellow-400'}`}>
-                              {summaryFile.status}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
+            </div>
+            <ScrollArea className="h-full">
+              <div className="space-y-2">
+                {summaryFiles.length === 0 ? (
+                  <div className="text-gray-400 text-center py-4 text-sm">
+                    No summaries found
+                  </div>
+                ) : (
+                  summaryFiles.map((summaryFile, index) => (
+                    <div
+                      key={`${summaryFile.file_id}-${index}`}
+                      className="bg-gray-700 rounded-lg p-3"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileText size={14} className="text-gray-400 flex-shrink-0" />
+                        <p className="text-white text-xs font-medium truncate flex-1" title={summaryFile.file_name}>
+                          {summaryFile.file_name}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <p className={`text-xs ${summaryFile.status === 'completed' ? 'text-green-400' : 'text-yellow-400'}`}>
+                          {summaryFile.status}
+                        </p>
+                        <div className="flex items-center gap-1">
                           {summaryFile.status === 'completed' && (
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => handleDownload(summaryFile.s3_url, summaryFile.file_name)}
-                              className="text-pink-400 hover:text-pink-300 hover:bg-pink-400/10"
+                              className="text-pink-400 hover:text-pink-300 hover:bg-pink-400/10 h-6 w-6 p-0"
                             >
-                              <Download className="h-4 w-4" />
+                              <Download className="h-3 w-3" />
                             </Button>
                           )}
                           <Button
@@ -325,41 +314,53 @@ const DeepInsights = () => {
                             variant="ghost"
                             onClick={() => handleDeleteSummary(summaryFile.file_name, summaryFile.file_id)}
                             disabled={deletingFileId === summaryFile.file_id}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10 h-6 w-6 p-0"
                           >
                             {deletingFileId === summaryFile.file_id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <Loader2 className="h-3 w-3 animate-spin" />
                             ) : (
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-3 w-3" />
                             )}
                           </Button>
                         </div>
                       </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+                    </div>
+                  ))
+                )}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
+      </div>
 
-        {/* Dynamic Sections Panel */}
-        {selectedFileIds.length > 0 && (
-          <Card className="bg-gray-800 border-gray-700 mt-6">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <BookOpen className="h-5 w-5" />
-                Document Sections Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoadingSections ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-white" />
-                  <span className="ml-2 text-white">Loading sections...</span>
+      {/* Main Content Area */}
+      <div className="flex-1 p-6">
+        <Card className="bg-gray-800 border-gray-700 h-full">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              Document Sections Analysis
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="h-full">
+            {selectedFileIds.length === 0 ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <FileIcon className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg">Select documents from the left panel</p>
+                  <p className="text-gray-500 text-sm mt-2">Choose one or more documents to view their section analysis</p>
                 </div>
-              ) : dynamicSections.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              </div>
+            ) : isLoadingSections ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-white mx-auto mb-4" />
+                  <p className="text-white">Analyzing document sections...</p>
+                </div>
+              </div>
+            ) : dynamicSections.length > 0 ? (
+              <ScrollArea className="h-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4">
                   {dynamicSections.map((section, index) => (
                     <div key={index} className="bg-gray-700 rounded-lg p-4">
                       <div className="flex items-start gap-3 mb-3">
@@ -383,14 +384,18 @@ const DeepInsights = () => {
                     </div>
                   ))}
                 </div>
-              ) : (
-                <div className="text-gray-400 text-center py-8">
-                  Select documents to view their section analysis
+              </ScrollArea>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <FileIcon className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg">No sections found</p>
+                  <p className="text-gray-500 text-sm mt-2">The selected documents don't have any analyzable sections</p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
