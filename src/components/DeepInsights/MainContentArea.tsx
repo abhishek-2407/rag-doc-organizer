@@ -47,9 +47,14 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   return (
-    <div className="flex-1 flex flex-col h-full">
-      {/* Generated Summaries Button - Top Right */}
-      <div className="p-6 pb-0 flex justify-end">
+    <div className="flex-1 flex flex-col h-screen relative bg-gray-900">
+      {/* Fixed Top Bar with Heading and Button */}
+      <div className="fixed top-0 left-80 right-0 z-10 bg-gray-900 px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+        <CardTitle className="text-white flex items-center gap-2">
+          <BookOpen className="h-5 w-5" />
+          Document Sections Details
+        </CardTitle>
+  
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -135,17 +140,11 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
           </PopoverContent>
         </Popover>
       </div>
-
-      {/* Document Sections Analysis - Bottom */}
-      <div className="flex-1 p-6 pt-0">
-        <Card className="bg-gray-800 border-gray-700 h-full">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <BookOpen className="h-5 w-5" />
-              Document Sections Analysis
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="h-full">
+  
+      {/* Scrollable Body below header */}
+      <div className="flex-1 mt-24 overflow-y-auto pb-12">
+        <Card className="bg-gray-900 border-gray-900">
+          <CardContent>
             <SectionsDisplayPanel
               selectedFileIds={selectedFileIds}
               isLoadingSections={isLoadingSections}
@@ -155,5 +154,5 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
         </Card>
       </div>
     </div>
-  );
+  );  
 };

@@ -16,9 +16,9 @@ export const FileSelectionSection: React.FC<FileSelectionSectionProps> = ({
 }) => {
   return (
     <div className="p-4 flex flex-col h-full">
-      <h3 className="text-white font-semibold mb-3">Select Documents</h3>
+      <h3 className="text-white font-semibold mb-2">Select Documents</h3>
       <ScrollArea className="flex-1">
-        <div className="space-y-2 pr-2">
+        <div className=" pr-2">
           {files.map((file) => (
             <div
               key={file.file_id}

@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileText, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FileSelectionSection } from './FileSelectionSection';
@@ -28,20 +26,21 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   onGenerateSummary,
 }) => {
   return (
-    <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col h-full">
-      {/* Header */}
+    <div className="w-80 h-screen bg-gray-800 border-r border-gray-700 flex flex-col">
+      {/* Header - fixed height */}
       <div className="p-4 border-b border-gray-700 flex-shrink-0">
-        <Link to="/">
-          <Button variant="ghost" size="sm" className="text-white hover:text-purple-500 mb-2">
-            <ArrowLeft className="h-3 w-3 mr-1" />
-            Back
-          </Button>
-        </Link>
-        <h1 className="text-xl font-bold text-white">Deep Insights</h1>
+        <div className="flex items-center ">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="text-white hover:text-purple-500 hover:bg-gray-600">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+            </Button>
+          </Link>
+          <h1 className="text-xl font-bold text-white ml-1">Deep Insights</h1>
+        </div>
       </div>
 
-      {/* File Selection - Scrollable */}
-      <div className="flex-1 flex flex-col min-h-0">
+      {/* Scrollable File List */}
+      <div className="flex-1 overflow-y-auto">
         <FileSelectionSection
           files={files}
           selectedFileIds={selectedFileIds}
@@ -49,12 +48,11 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
         />
       </div>
 
-      {/* Summary Generation - Fixed at bottom */}
-      <div className="p-4 border-t border-gray-700 flex-shrink-0 bg-gray-800">
+      {/* Fixed Generate Summary Section */}
+      <div className="p-4 border-t border-gray-700 bg-gray-800 flex-shrink-0">
         <h3 className="text-white font-semibold mb-3">Generate Summary</h3>
         <div className="space-y-3">
           <div>
-            <Label htmlFor="fileName" className="text-white text-sm">File Name</Label>
             <Input
               id="fileName"
               value={fileName}
