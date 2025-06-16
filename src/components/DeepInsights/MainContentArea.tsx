@@ -49,7 +49,7 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
   return (
     <div className="flex-1 flex flex-col h-screen relative bg-gray-900">
       {/* Fixed Top Bar with Heading and Button */}
-      <div className="fixed top-0 left-96 right-0 z-10 bg-gray-900 px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+      <div className="fixed top-0 left-96 right-0 z-10 bg-gray-900 px-6 py-4 flex items-center justify-between">
         <CardTitle className="text-white flex items-center gap-2">
           <BookOpen className="h-5 w-5" />
           Document Section Details

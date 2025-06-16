@@ -22,11 +22,11 @@ export const SectionsDisplayPanel: React.FC<SectionsDisplayPanelProps> = ({
 }) => {
   if (selectedFileIds.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full ">
         <div className="text-center">
           <FileIcon className="h-16 w-16 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-400 text-lg">Select documents from the left panel</p>
-          <p className="text-gray-500 text-sm mt-2">Choose one or more documents to view their section analysis</p>
+          <p className="text-gray-500 text-sm mt-2">Choose one or more documents to view their section details</p>
         </div>
       </div>
     );

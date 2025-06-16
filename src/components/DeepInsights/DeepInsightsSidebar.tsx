@@ -26,7 +26,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   onGenerateSummary,
 }) => {
   return (
-    <div className="w-96 h-screen bg-gray-800 border-r border-gray-700 flex flex-col">
+    <div className="w-96 h-screen bg-gray-800 flex flex-col">
       {/* Header - fixed height */}
       <div className="p-4 border-b border-gray-700 flex-shrink-0">
         <div className="flex items-center ">
