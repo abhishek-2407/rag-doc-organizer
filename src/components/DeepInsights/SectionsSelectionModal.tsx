@@ -21,7 +21,9 @@ interface SectionsSelectionModalProps {
 const FIXED_SECTIONS = [
   'Profitability',
   'Revenue',
-  'Market Lookup'
+  'Market Lookup',
+  'Expenses',
+  'Reasoning'
 ];
 
 export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
@@ -152,7 +154,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
           <div>
             <h4 className="text-sm font-semibold text-white mb-3">Fixed Sections</h4>
             <div className="border border-gray-700 rounded-lg p-3">
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
                 {FIXED_SECTIONS.map((section) => (
                   <div key={section} className="flex items-center gap-2">
                     <Checkbox

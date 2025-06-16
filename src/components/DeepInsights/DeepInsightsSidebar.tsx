@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,8 +35,17 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   onGenerateSummary,
   dynamicSections,
 }) => {
+  const [selectedDynamicSections, setSelectedDynamicSections] = useState<any>({});
+  const [selectedFixedSections, setSelectedFixedSections] = useState<string[]>([]);
+
   const handleSectionSelection = (dynamicSectionList: any, fixedSectionList: string[]) => {
-    onGenerateSummary(dynamicSectionList, fixedSectionList);
+    console.log('Sections selected:', { dynamicSectionList, fixedSectionList });
+    setSelectedDynamicSections(dynamicSectionList);
+    setSelectedFixedSections(fixedSectionList);
+  };
+
+  const handleGenerateSummary = () => {
+    onGenerateSummary(selectedDynamicSections, selectedFixedSections);
   };
 
   return (
@@ -84,7 +93,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
           </div>
 
           <Button
-            onClick={() => onGenerateSummary()}
+            onClick={handleGenerateSummary}
             disabled={isGenerating || !fileName.trim() || selectedFileIds.length === 0}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 text-sm"
           >
