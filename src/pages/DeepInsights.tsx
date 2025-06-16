@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from '@/components/ui/sonner';
 import { useFileSelection } from '../components/ChatSection/useFileSelection';
@@ -97,7 +96,7 @@ const DeepInsights = () => {
     }
   };
 
-  const handleGenerateSummary = async () => {
+  const handleGenerateSummary = async (dynamicSectionList?: any, fixedSectionList?: string[]) => {
     if (!fileName.trim()) {
       toast.error('Please enter a file name');
       return;
@@ -111,17 +110,28 @@ const DeepInsights = () => {
     setIsGenerating(true);
 
     try {
+      const payload: any = {
+        thread_id: 'generated-summary-file',
+        file_id_list: selectedFileIds,
+        file_name: fileName.trim(),
+        user_id: UserId
+      };
+
+      // Add section selections if provided
+      if (dynamicSectionList && Object.keys(dynamicSectionList).length > 0) {
+        payload.dynamic_section_list = dynamicSectionList;
+      }
+
+      if (fixedSectionList && fixedSectionList.length > 0) {
+        payload.fixed_section_list = fixedSectionList;
+      }
+
       const response = await fetch(`${ApiUrl}/doc-eval/summary-file`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          thread_id: 'generated-summary-file',
-          file_id_list: selectedFileIds,
-          file_name: fileName.trim(),
-          user_id: UserId
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -183,6 +193,7 @@ const DeepInsights = () => {
         setFileName={setFileName}
         isGenerating={isGenerating}
         onGenerateSummary={handleGenerateSummary}
+        dynamicSections={dynamicSections}
       />
       
       <MainContentArea

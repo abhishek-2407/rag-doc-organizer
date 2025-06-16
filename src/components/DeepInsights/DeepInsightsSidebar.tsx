@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,6 +6,13 @@ import { Label } from '@/components/ui/label';
 import { FileText, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FileSelectionSection } from './FileSelectionSection';
+import { SectionsSelectionModal } from './SectionsSelectionModal';
+
+interface Section {
+  section_title: string;
+  summary: string;
+  pages: number[];
+}
 
 interface DeepInsightsSidebarProps {
   files: any[];
@@ -13,7 +21,8 @@ interface DeepInsightsSidebarProps {
   fileName: string;
   setFileName: (name: string) => void;
   isGenerating: boolean;
-  onGenerateSummary: () => void;
+  onGenerateSummary: (dynamicSections?: any, fixedSections?: string[]) => void;
+  dynamicSections: Section[];
 }
 
 export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
@@ -24,7 +33,12 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   setFileName,
   isGenerating,
   onGenerateSummary,
+  dynamicSections,
 }) => {
+  const handleSectionSelection = (dynamicSectionList: any, fixedSectionList: string[]) => {
+    onGenerateSummary(dynamicSectionList, fixedSectionList);
+  };
+
   return (
     <div className="w-96 h-screen bg-gray-800 flex flex-col">
       {/* Header - fixed height */}
@@ -50,7 +64,14 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
 
       {/* Fixed Generate Summary Section */}
       <div className="p-4 border-t border-gray-700 bg-gray-800 flex-shrink-0">
-        <h3 className="text-white font-semibold mb-3">Generate Summary</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-white font-semibold">Generate Summary</h3>
+          <SectionsSelectionModal
+            dynamicSections={dynamicSections}
+            selectedFileIds={selectedFileIds}
+            onSectionSelection={handleSectionSelection}
+          />
+        </div>
         <div className="space-y-3">
           <div>
             <Input
@@ -63,7 +84,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
           </div>
 
           <Button
-            onClick={onGenerateSummary}
+            onClick={() => onGenerateSummary()}
             disabled={isGenerating || !fileName.trim() || selectedFileIds.length === 0}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 text-sm"
           >
