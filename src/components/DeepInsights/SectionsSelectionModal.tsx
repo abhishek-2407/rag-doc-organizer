@@ -129,7 +129,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
                           onCheckedChange={(checked) => 
                             handleDynamicSectionToggle(fileId, section, checked as boolean)
                           }
-                          className="mt-1"
+                          className="mt-1 border-grey bg-gray-700"
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-1 mb-1">
@@ -160,6 +160,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
                       onCheckedChange={(checked) => 
                         handleFixedSectionToggle(section, checked as boolean)
                       }
+                      className="mt-1 border-grey bg-gray-700"
                     />
                     <span className="text-sm">{section}</span>
                   </div>
