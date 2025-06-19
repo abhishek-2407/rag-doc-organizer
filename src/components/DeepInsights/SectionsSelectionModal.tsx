@@ -19,11 +19,28 @@ interface SectionsSelectionModalProps {
 }
 
 const FIXED_SECTIONS = [
-  'Profitability',
-  'Revenue',
-  'Market Lookup',
-  'Expenses',
-  'Reasoning'
+  'Volume Growth',
+  'Logistic',
+  'RMC VAC Plus',
+  'TALUKA RANKING',
+  'UBS-outlets',
+  'Actual vs budgeted variable cost',
+  'Progress of projects',
+  'INDUSTRY GROWTH VIS-A-VIS UTCL',
+  'REGION WISE MARKET SHARE',
+  'SEGMENT-WISE GROWTH',
+  'NCR',
+  'TRADE NCR vs INSTITUTIONAL NCR',
+  'Key Outstanding',
+  'UBS Slide',
+  'Sales performance trend',
+  'VARIABLE COST',
+  'Fuel Mix',
+  'POWER HEAT CONSUMPTION vs Budget',
+  'Fixed costs',
+  'FINANCIALS',
+  'OVERSEAS OPERATIONS',
+  'Safety'
 ];
 
 export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
@@ -100,7 +117,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
           disabled={selectedFileIds.length === 0}
         >
           <List className="h-3 w-3 mr-1" />
-          Sections
+          Select Sections
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl max-h-[80vh]">
