@@ -40,7 +40,12 @@ const FIXED_SECTIONS = [
   'Fixed costs',
   'FINANCIALS',
   'OVERSEAS OPERATIONS',
-  'Safety'
+  'Safety',
+  'Profitability',
+  'Revenue',
+  'Market Lookup',
+  'Expenses',
+  'Reasoning'
 ];
 
 export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
@@ -170,7 +175,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
           {/* Fixed Sections */}
           <div>
             <h4 className="text-sm font-semibold text-white mb-3">Fixed Sections</h4>
-            <div className="border border-gray-700 rounded-lg p-3">
+            <ScrollArea className="h-48 border border-gray-700 rounded-lg p-3">
               <div className="grid grid-cols-2 gap-2">
                 {FIXED_SECTIONS.map((section) => (
                   <div key={section} className="flex items-center gap-2">
@@ -185,7 +190,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
                   </div>
                 ))}
               </div>
-            </div>
+            </ScrollArea>
           </div>
 
           {/* Apply Button */}
