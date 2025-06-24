@@ -38,7 +38,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
 }) => {
   const [selectedDynamicSections, setSelectedDynamicSections] = useState<any>({});
   const [selectedFixedSections, setSelectedFixedSections] = useState<string[]>([]);
-  const [fileType, setFileType] = useState<string>('both');
+  const [selectedFileTypes, setSelectedFileTypes] = useState<string[]>(['detailed_insights']);
 
   const handleSectionSelection = (dynamicSectionList: any, fixedSectionList: string[]) => {
     console.log('Sections selected:', { dynamicSectionList, fixedSectionList });
@@ -46,7 +46,23 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
     setSelectedFixedSections(fixedSectionList);
   };
 
+  const handleFileTypeChange = (values: string[]) => {
+    setSelectedFileTypes(values);
+  };
+
+  const getFileTypeForAPI = () => {
+    if (selectedFileTypes.length === 2) {
+      return 'all';
+    } else if (selectedFileTypes.includes('detailed_insights')) {
+      return 'detailed_insights';
+    } else if (selectedFileTypes.includes('discussion_points')) {
+      return 'discussion_points';
+    }
+    return 'detailed_insights'; // default fallback
+  };
+
   const handleGenerateSummary = () => {
+    const fileType = getFileTypeForAPI();
     onGenerateSummary(selectedDynamicSections, selectedFixedSections, fileType);
   };
 
@@ -89,9 +105,9 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
               Select File Type
             </Label>
             <ToggleGroup 
-              type="single" 
-              value={fileType} 
-              onValueChange={(value) => setFileType(value || 'both')}
+              type="multiple" 
+              value={selectedFileTypes} 
+              onValueChange={handleFileTypeChange}
               className="grid grid-cols-1 gap-1 mt-1"
             >
               <ToggleGroupItem 
@@ -105,12 +121,6 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
                 className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
               >
                 Discussion Points
-              </ToggleGroupItem>
-              <ToggleGroupItem 
-                value="both" 
-                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
-              >
-                Both
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
