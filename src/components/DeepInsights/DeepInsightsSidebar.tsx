@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileText, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FileSelectionSection } from './FileSelectionSection';
@@ -21,7 +22,7 @@ interface DeepInsightsSidebarProps {
   fileName: string;
   setFileName: (name: string) => void;
   isGenerating: boolean;
-  onGenerateSummary: (dynamicSections?: any, fixedSections?: string[]) => void;
+  onGenerateSummary: (dynamicSections?: any, fixedSections?: string[], fileType?: string) => void;
   dynamicSections: Section[];
 }
 
@@ -37,6 +38,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
 }) => {
   const [selectedDynamicSections, setSelectedDynamicSections] = useState<any>({});
   const [selectedFixedSections, setSelectedFixedSections] = useState<string[]>([]);
+  const [fileType, setFileType] = useState<string>('both');
 
   const handleSectionSelection = (dynamicSectionList: any, fixedSectionList: string[]) => {
     console.log('Sections selected:', { dynamicSectionList, fixedSectionList });
@@ -45,7 +47,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   };
 
   const handleGenerateSummary = () => {
-    onGenerateSummary(selectedDynamicSections, selectedFixedSections);
+    onGenerateSummary(selectedDynamicSections, selectedFixedSections, fileType);
   };
 
   return (
@@ -82,6 +84,28 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
           />
         </div>
         <div className="space-y-3">
+          <div>
+            <Label htmlFor="fileType" className="text-white text-sm font-medium">
+              Select File Type
+            </Label>
+            <Select value={fileType} onValueChange={setFileType}>
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-1 text-sm">
+                <SelectValue placeholder="Select file type" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="detailed_insights" className="text-white hover:bg-gray-600">
+                  Detailed Insights
+                </SelectItem>
+                <SelectItem value="discussion_points" className="text-white hover:bg-gray-600">
+                  Discussion Points
+                </SelectItem>
+                <SelectItem value="both" className="text-white hover:bg-gray-600">
+                  Both
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <div>
             <Input
               id="fileName"

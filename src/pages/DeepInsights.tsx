@@ -96,7 +96,7 @@ const DeepInsights = () => {
     }
   };
 
-  const handleGenerateSummary = async (dynamicSectionList?: any, fixedSectionList?: string[]) => {
+  const handleGenerateSummary = async (dynamicSectionList?: any, fixedSectionList?: string[], fileType?: string) => {
     if (!fileName.trim()) {
       toast.error('Please enter a file name');
       return;
@@ -114,7 +114,8 @@ const DeepInsights = () => {
         thread_id: 'generated-summary-file',
         file_id_list: selectedFileIds,
         file_name: fileName.trim(),
-        user_id: UserId
+        user_id: UserId,
+        file_type: fileType || 'both'
       };
 
       // Add section selections if provided
