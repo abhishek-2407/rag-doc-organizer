@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { FileText, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FileSelectionSection } from './FileSelectionSection';
@@ -88,22 +88,31 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
             <Label htmlFor="fileType" className="text-white text-sm font-medium">
               Select File Type
             </Label>
-            <Select value={fileType} onValueChange={setFileType}>
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-1 text-sm">
-                <SelectValue placeholder="Select file type" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="detailed_insights" className="text-white hover:bg-gray-600">
-                  Detailed Insights
-                </SelectItem>
-                <SelectItem value="discussion_points" className="text-white hover:bg-gray-600">
-                  Discussion Points
-                </SelectItem>
-                <SelectItem value="both" className="text-white hover:bg-gray-600">
-                  Both
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <ToggleGroup 
+              type="single" 
+              value={fileType} 
+              onValueChange={(value) => setFileType(value || 'both')}
+              className="grid grid-cols-1 gap-1 mt-1"
+            >
+              <ToggleGroupItem 
+                value="detailed_insights" 
+                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
+              >
+                Detailed Insights
+              </ToggleGroupItem>
+              <ToggleGroupItem 
+                value="discussion_points" 
+                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
+              >
+                Discussion Points
+              </ToggleGroupItem>
+              <ToggleGroupItem 
+                value="both" 
+                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
+              >
+                Both
+              </ToggleGroupItem>
+            </ToggleGroup>
           </div>
           
           <div>
