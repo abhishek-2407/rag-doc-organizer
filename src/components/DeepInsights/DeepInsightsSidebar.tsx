@@ -47,7 +47,10 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
   };
 
   const handleFileTypeChange = (values: string[]) => {
-    setSelectedFileTypes(values);
+    // Ensure at least one option is always selected
+    if (values.length > 0) {
+      setSelectedFileTypes(values);
+    }
   };
 
   const getFileTypeForAPI = () => {
@@ -65,6 +68,9 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
     const fileType = getFileTypeForAPI();
     onGenerateSummary(selectedDynamicSections, selectedFixedSections, fileType);
   };
+
+  const isDetailedInsightsSelected = selectedFileTypes.includes('detailed_insights');
+  const canGenerateSummary = selectedFileTypes.length > 0 && fileName.trim() && selectedFileIds.length > 0;
 
   return (
     <div className="w-96 h-screen bg-gray-800 flex flex-col">
@@ -97,6 +103,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
             dynamicSections={dynamicSections}
             selectedFileIds={selectedFileIds}
             onSectionSelection={handleSectionSelection}
+            disabled={!isDetailedInsightsSelected || selectedFileIds.length === 0}
           />
         </div>
         <div className="space-y-3">
@@ -137,7 +144,7 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
 
           <Button
             onClick={handleGenerateSummary}
-            disabled={isGenerating || !fileName.trim() || selectedFileIds.length === 0}
+            disabled={isGenerating || !canGenerateSummary}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 text-sm"
           >
             {isGenerating ? (

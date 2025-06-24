@@ -16,6 +16,7 @@ interface SectionsSelectionModalProps {
   dynamicSections: Section[];
   selectedFileIds: string[];
   onSectionSelection: (dynamicSections: any, fixedSections: string[]) => void;
+  disabled?: boolean;
 }
 
 const FIXED_SECTIONS = [
@@ -52,6 +53,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
   dynamicSections,
   selectedFileIds,
   onSectionSelection,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDynamicSections, setSelectedDynamicSections] = useState<{[key: string]: Section[]}>({});
@@ -119,7 +121,7 @@ export const SectionsSelectionModal: React.FC<SectionsSelectionModalProps> = ({
           variant="outline"
           size="sm"
           className="ml-2 bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
-          disabled={selectedFileIds.length === 0}
+          disabled={disabled}
         >
           <List className="h-3 w-3 mr-1" />
           Select Sections
