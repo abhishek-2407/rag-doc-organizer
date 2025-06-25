@@ -115,17 +115,17 @@ export const DeepInsightsSidebar: React.FC<DeepInsightsSidebarProps> = ({
               type="multiple" 
               value={selectedFileTypes} 
               onValueChange={handleFileTypeChange}
-              className="grid grid-cols-1 gap-1 mt-1"
+              className="grid grid-cols-2 gap-2 mt-1"
             >
               <ToggleGroupItem 
                 value="detailed_insights" 
-                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
+                className="bg-gray-700 border-gray-600 text-white text-xs py-2 px-2 data-[state=on]:bg-blue-600 data-[state=on]:text-white hover:bg-gray-600"
               >
                 Detailed Insights
               </ToggleGroupItem>
               <ToggleGroupItem 
                 value="discussion_points" 
-                className="bg-gray-700 border-gray-600 text-white text-xs py-1 px-2 data-[state=on]:bg-emerald-600 data-[state=on]:text-white hover:bg-gray-600"
+                className="bg-gray-700 border-gray-600 text-white text-xs py-2 px-2 data-[state=on]:bg-blue-600 data-[state=on]:text-white hover:bg-gray-600"
               >
                 Discussion Points
               </ToggleGroupItem>
