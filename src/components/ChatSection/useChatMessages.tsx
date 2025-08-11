@@ -14,7 +14,7 @@ export const useChatMessages = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<{file_id: string, file_name: string}[]>([]);
     const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
     const [isUserScrolling, setIsUserScrolling] = useState(false);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,7 @@ export const useChatMessages = () => {
                     query,
                     user_id: "11111111-1111-1111-1111-111111111111",
                     query_id: "query_1",
-                    file_id_list: selectedFileIds,
+                    file_id_list: selectedFiles,
                     stream: true
                 })
             });
@@ -202,8 +202,8 @@ export const useChatMessages = () => {
         inputMessage,
         setInputMessage,
         isLoading,
-        setSelectedFileIds,
-        selectedFileIds,
+        setSelectedFiles,
+        selectedFiles,
         handleSubmit,
         chatContainerRef,
     };
