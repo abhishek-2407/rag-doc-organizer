@@ -34,7 +34,14 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { FileIcon, Loader2Icon, Plus, X, XIcon } from "lucide-react";
+import {
+  FileIcon,
+  Loader2Icon,
+  Plus,
+  X,
+  XIcon,
+  RefreshCwIcon,
+} from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -274,7 +281,31 @@ export default function Testing() {
                         <TableCell>{file.file_name}</TableCell>
                         <TableCell>
                           {file.rag_status ? (
-                            <span className="text-green-400">✓ Complete</span>
+                            <span className="text-green-400 flex items-center gap-2">
+                              ✓ Complete{" "}
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-8"
+                                onClick={() => {
+                                  toast.promise(
+                                    handleCreateRAG(
+                                      file.file_id,
+                                      TestsFolder,
+                                      loadingRAG,
+                                      setLoadingRAG,
+                                      filesByFolder,
+                                      setFilesByFolder
+                                    ),
+                                    {
+                                      loading: "Re-creating RAG",
+                                    }
+                                  );
+                                }}
+                              >
+                                <RefreshCwIcon className="size-2" />
+                              </Button>
+                            </span>
                           ) : (
                             <span className="text-yellow-400">Pending</span>
                           )}
@@ -366,7 +397,12 @@ export default function Testing() {
           </div>
         </div>
 
-        <Button className="col-span-full">Add Test Case</Button>
+        <Button
+          disabled={form.formState.isSubmitting}
+          className="col-span-full"
+        >
+          Add Test Case
+        </Button>
       </form>
 
       <div className="p-4 flex flex-col gap-4">
@@ -411,13 +447,13 @@ function TestcaseCard({
     isLoading,
     handleSubmit,
     chatContainerRef,
-    setSelectedFileIds,
+    setSelectedFiles,
   } = useChatMessages();
 
   useEffect(() => {
     setMessages([]);
     setInputMessage(testcase.prompt);
-    setSelectedFileIds(files.map((e) => e.file_id));
+    setSelectedFiles(files);
     handleSubmit();
   }, [testcase.prompt]);
 
@@ -425,8 +461,8 @@ function TestcaseCard({
     <div className="border p-4 rounded relative">
       <Button
         size="icon"
-        variant="outline"
-        className="rounded-full absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+        variant="ghost"
+        className="absolute top-0 right-0"
         onClick={() => {
           toast.warning(`Confirm delete testcase: ${testcase.id}`, {
             action: {
