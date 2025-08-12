@@ -87,8 +87,8 @@ export const useChatMessages = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (!e) e.preventDefault();
         if (!inputMessage.trim()) return;
 
         setMessages(prev => [...prev, { content: inputMessage, sender: "user" }]);
