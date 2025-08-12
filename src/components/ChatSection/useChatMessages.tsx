@@ -199,6 +199,7 @@ export const useChatMessages = () => {
 
     return {
         messages,
+        setMessages,
         inputMessage,
         setInputMessage,
         isLoading,

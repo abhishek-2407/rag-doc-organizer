@@ -68,6 +68,12 @@ const Landing = () => {
             Deep Insights
           </Button>
         </Link>
+
+        <Link to="/testing">
+          <Button className="bg-yellow-600 hover:bg-yellow-500 text-white font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 shadow-lg">
+            Testing
+          </Button>
+        </Link>
       </div>
     </div>
   );

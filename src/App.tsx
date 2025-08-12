@@ -14,6 +14,7 @@ import Invite from "./pages/Invite";
 import DeepInsights from "./pages/DeepInsights";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Testing from "./pages/Testing";
 
 const queryClient = new QueryClient();
 
@@ -42,8 +43,19 @@ const App = () => (
               <ProtectedRoute>
                 <Section />
               </ProtectedRoute>
-            } />
-            <Route path="/deep-insights" element={
+              }
+            />
+            <Route
+              path="/testing"
+              element={
+                <ProtectedRoute>
+                  <Testing />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/deep-insights"
+              element={
               <ProtectedRoute>
                 <DeepInsights />
               </ProtectedRoute>
