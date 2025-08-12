@@ -103,7 +103,10 @@ export default function Testing() {
     queryKey: ["testcases"],
     queryFn: async () => {
       const response = await axios.get(`${ApiUrl}/testcases/`);
-      return response.data as (TestCaseType & { id: string })[];
+      return response.data as (TestCaseType & {
+        id: string;
+        files: { file_id: string; file_name: string }[];
+      })[];
     },
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -287,6 +290,7 @@ export default function Testing() {
                                 size="icon"
                                 variant="ghost"
                                 className="size-8"
+                                type="button"
                                 onClick={() => {
                                   toast.promise(
                                     handleCreateRAG(
@@ -426,14 +430,17 @@ function TestcaseCard({
   deleteTestcaseMutation,
 }: {
   filesByFolder: FilesByFolder;
-  testcase: TestCaseType & { id: string };
+  testcase: TestCaseType & {
+    id: string;
+    files: { file_id: string; file_name: string }[];
+  };
   deleteTestcaseMutation: UseMutationResult;
 }) {
   const files = useMemo(
     () =>
-      testcase.file_id_list.map(
+      testcase.files.map(
         (t) =>
-          filesByFolder[TestsFolder].filter((f) => f.file_id == t)[0] ??
+          filesByFolder[TestsFolder].filter((f) => f.file_id == t.file_id)[0] ??
           undefined
       ) ?? [],
     [testcase]
