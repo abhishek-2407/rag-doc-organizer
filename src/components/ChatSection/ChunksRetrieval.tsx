@@ -57,15 +57,6 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!userQuery.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a user query",
-        variant: "destructive"
-      });
-      return;
-    }
 
     if (selectedFiles.length === 0) {
       toast({
