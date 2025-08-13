@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, ChevronRight, FolderOpen, File } from 'lucide-react';
+import { Send, ChevronRight, FolderOpen, File, FileText } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,12 @@ import { useChatMessages } from './useChatMessages';
 import { useFileSelection } from './useFileSelection';
 import { FolderTree } from './FolderTree';
 import { MessageList } from './MessageList';
+import ChunksRetrieval from './ChunksRetrieval';
 import './ChatSection.css';
 
 const ChatSection = () => {
+    const [showChunks, setShowChunks] = useState(false);
+    
     const {
         messages,
         inputMessage,
@@ -64,32 +67,59 @@ const ChatSection = () => {
                 <div className="right-panel">
                     <div className="chat-header">
                         <h1>Document Analysis</h1>
-                        <h2>Get Insights</h2>
+                        <div className="flex items-center gap-4">
+                            <h2>Get Insights</h2>
+                            <Button
+                                onClick={() => setShowChunks(!showChunks)}
+                                variant="outline"
+                                size="sm"
+                                className="bg-transparent border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white"
+                            >
+                                <FileText className="mr-2 h-4 w-4" />
+                                {showChunks ? 'Back to Chat' : 'Get Chunks'}
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="chat-app">
-                        <ScrollArea className="chat-messages" ref={chatContainerRef}>
-                            <MessageList messages={messages} />
-                        </ScrollArea>
+                        {!showChunks ? (
+                            <>
+                                <ScrollArea className="chat-messages" ref={chatContainerRef}>
+                                    <MessageList messages={messages} />
+                                </ScrollArea>
 
-                        <form className="chat-input" onSubmit={handleSubmit}>
-                            <Input
-                                type="text"
-                                value={inputMessage}
-                                onChange={(e) => setInputMessage(e.target.value)}
-                                placeholder="Type your message..."
-                                disabled={isLoading}
-                                className="bg-gray-800 text-white border-gray-600"
-                            />
-                            <Button 
-                                type="submit" 
-                                disabled={isLoading || !inputMessage.trim()}
-                                className="send-button"
-                                size="icon"
-                            >
-                                <Send size={20} />
-                            </Button>
-                        </form>
+                                <form className="chat-input" onSubmit={handleSubmit}>
+                                    <Input
+                                        type="text"
+                                        value={inputMessage}
+                                        onChange={(e) => setInputMessage(e.target.value)}
+                                        placeholder="Type your message..."
+                                        disabled={isLoading}
+                                        className="bg-gray-800 text-white border-gray-600"
+                                    />
+                                    <Button 
+                                        type="submit" 
+                                        disabled={isLoading || !inputMessage.trim()}
+                                        className="send-button"
+                                        size="icon"
+                                    >
+                                        <Send size={20} />
+                                    </Button>
+                                </form>
+                            </>
+                        ) : (
+                            <div className="p-4 h-full">
+                                <ChunksRetrieval 
+                                    selectedFiles={selectedFileIds.map(fileId => {
+                                        const file = files.find(f => f.file_id === fileId);
+                                        return {
+                                            file_id: fileId,
+                                            file_name: file?.file_name || ''
+                                        };
+                                    })} 
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
