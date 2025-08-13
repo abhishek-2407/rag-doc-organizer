@@ -120,121 +120,134 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
   };
 
   return (
-    <div className="chunks-retrieval h-full flex flex-col">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold text-white mb-2">Retrieve Document Chunks</h2>
-        <p className="text-gray-400 text-sm">
-          Selected Files: {selectedFiles.length > 0 ? selectedFiles.map(f => f.file_name).join(', ') : 'None'}
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-        <div>
-          <Label htmlFor="userQuery" className="text-white">User Query</Label>
-          <Textarea
-            id="userQuery"
-            value={userQuery}
-            onChange={(e) => setUserQuery(e.target.value)}
-            placeholder="Show me the consolidated revenue growth for last 5 years"
-            className="bg-gray-800 text-white border-gray-600"
-            rows={3}
-          />
+    <div className="chunks-retrieval h-full flex gap-6">
+      {/* Left Panel - Form */}
+      <div className="w-1/2 flex flex-col">
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold text-white mb-2">Retrieve Document Chunks</h2>
+          <p className="text-gray-400 text-sm">
+            Selected Files: {selectedFiles.length > 0 ? selectedFiles.map(f => f.file_name).join(', ') : 'None'}
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="topK" className="text-white">Top K</Label>
-            <Input
-              id="topK"
-              type="number"
-              value={topK}
-              onChange={(e) => setTopK(parseInt(e.target.value) || 5)}
+            <Label htmlFor="userQuery" className="text-white">User Query</Label>
+            <Textarea
+              id="userQuery"
+              value={userQuery}
+              onChange={(e) => setUserQuery(e.target.value)}
+              placeholder="Show me the consolidated revenue growth for last 5 years"
               className="bg-gray-800 text-white border-gray-600"
-              min="1"
-              max="20"
+              rows={3}
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="topK" className="text-white">Top K</Label>
+              <Input
+                id="topK"
+                type="number"
+                value={topK}
+                onChange={(e) => setTopK(parseInt(e.target.value) || 5)}
+                className="bg-gray-800 text-white border-gray-600"
+                min="1"
+                max="20"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="pageList" className="text-white">Page List (comma separated)</Label>
+              <Input
+                id="pageList"
+                value={pageList}
+                onChange={(e) => setPageList(e.target.value)}
+                placeholder="1, 2, 3"
+                className="bg-gray-800 text-white border-gray-600"
+              />
+            </div>
+          </div>
+
           <div>
-            <Label htmlFor="pageList" className="text-white">Page List (comma separated)</Label>
-            <Input
-              id="pageList"
-              value={pageList}
-              onChange={(e) => setPageList(e.target.value)}
-              placeholder="1, 2, 3"
-              className="bg-gray-800 text-white border-gray-600"
-            />
-          </div>
-        </div>
-
-        <div>
-          <Label className="text-white mb-2 block">Statement Type (multiple selection)</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {statementOptions.map((option) => (
-              <div key={option} className="flex items-center space-x-2">
-                <Checkbox
-                  id={option}
-                  checked={statementTypes.includes(option)}
-                  onCheckedChange={(checked) => handleStatementTypeChange(option, checked as boolean)}
-                />
-                <Label htmlFor={option} className="text-white capitalize">
-                  {option}
-                </Label>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <Label className="text-white mb-2 block">Is Financial Statement</Label>
-          <Select value={isFinancialStatement} onValueChange={setIsFinancialStatement}>
-            <SelectTrigger className="bg-gray-800 text-white border-gray-600">
-              <SelectValue placeholder="Select Yes or No" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Yes">Yes</SelectItem>
-              <SelectItem value="No">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="w-full"
-        >
-          {isLoading ? 'Retrieving...' : 'Retrieve Chunks'}
-        </Button>
-      </form>
-
-      {chunks && (
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white mb-4">
-            Results ({chunks.chunks?.length || 0} chunks)
-          </h3>
-          <ScrollArea className="h-96">
-            <div className="space-y-4">
-              {chunks.chunks?.map((chunk, index) => (
-                <Card key={index} className="bg-gray-800 border-gray-600">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm text-white">
-                      {chunk.metadata.file_name} - Page {chunk.metadata.page_number}
-                    </CardTitle>
-                    <div className="text-xs text-gray-400">
-                      Type: {chunk.metadata.type} | 
-                      Statement: {chunk.metadata.statement_type} | 
-                      Financial: {chunk.metadata.is_financial_statement}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-300 text-sm">{chunk.page_content}</p>
-                  </CardContent>
-                </Card>
+            <Label className="text-white mb-2 block">Statement Type (multiple selection)</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {statementOptions.map((option) => (
+                <div key={option} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={option}
+                    checked={statementTypes.includes(option)}
+                    onCheckedChange={(checked) => handleStatementTypeChange(option, checked as boolean)}
+                  />
+                  <Label htmlFor={option} className="text-white capitalize">
+                    {option}
+                  </Label>
+                </div>
               ))}
             </div>
-          </ScrollArea>
-        </div>
-      )}
+          </div>
+
+          <div>
+            <Label className="text-white mb-2 block">Is Financial Statement</Label>
+            <Select value={isFinancialStatement} onValueChange={setIsFinancialStatement}>
+              <SelectTrigger className="bg-gray-800 text-white border-gray-600">
+                <SelectValue placeholder="Select Yes or No" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? 'Retrieving...' : 'Retrieve Chunks'}
+          </Button>
+        </form>
+      </div>
+
+      {/* Right Panel - Results */}
+      <div className="w-1/2 flex flex-col">
+        {chunks && (
+          <>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-white">
+                Results ({chunks.chunks?.length || 0} chunks)
+              </h3>
+            </div>
+            <ScrollArea className="flex-1">
+              <div className="space-y-4 pr-4">
+                {chunks.chunks?.map((chunk, index) => (
+                  <Card key={index} className="bg-gray-800 border-gray-600">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-white">
+                        {chunk.metadata.file_name} - Page {chunk.metadata.page_number}
+                      </CardTitle>
+                      <div className="text-xs text-gray-400">
+                        Type: {chunk.metadata.type} | 
+                        Statement: {chunk.metadata.statement_type} | 
+                        Financial: {chunk.metadata.is_financial_statement}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-300 text-sm">{chunk.page_content}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </>
+        )}
+        {!chunks && (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-gray-400">Submit a query to see results here</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
