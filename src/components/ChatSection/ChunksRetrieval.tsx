@@ -122,7 +122,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
   return (
     <div className="chunks-retrieval h-full flex gap-6">
       {/* Left Panel - Form */}
-      <div className="w-1/2 flex flex-col">
+      <div className="w-2/5 flex flex-col">
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-white mb-2">Retrieve Document Chunks</h2>
           <p className="text-gray-400 text-sm">
@@ -130,7 +130,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <Label htmlFor="userQuery" className="text-white">User Query</Label>
             <Textarea
@@ -178,6 +178,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
                     id={option}
                     checked={statementTypes.includes(option)}
                     onCheckedChange={(checked) => handleStatementTypeChange(option, checked as boolean)}
+                    className="border-color-white"
                   />
                   <Label htmlFor={option} className="text-white capitalize">
                     {option}
@@ -203,7 +204,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
           <Button 
             type="submit" 
             disabled={isLoading}
-            className="w-full"
+            className="bg-pink-600 text-white hover:bg-pink-900 hover:text-white hover:border-pink-600"
           >
             {isLoading ? 'Retrieving...' : 'Retrieve Chunks'}
           </Button>
@@ -211,7 +212,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
       </div>
 
       {/* Right Panel - Results */}
-      <div className="w-1/2 flex flex-col">
+      <div className="w-3/5 flex flex-col">
         {chunks && (
           <>
             <div className="mb-4">
