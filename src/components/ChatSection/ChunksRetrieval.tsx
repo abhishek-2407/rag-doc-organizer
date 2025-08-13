@@ -219,10 +219,12 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
                       <CardTitle className="text-sm text-white">
                         {chunk.metadata.file_name} - Page {chunk.metadata.page_number}
                       </CardTitle>
-                      <div className="text-xs text-gray-400">
-                        Type: {chunk.metadata.type} | 
-                        Statement: {chunk.metadata.statement_type} | 
-                        Financial: {chunk.metadata.is_financial_statement}
+                      <div className="text-xs text-gray-400 space-y-1">
+                        <div>Type: {chunk.metadata.type} | Statement: {chunk.metadata.statement_type} | Financial: {chunk.metadata.is_financial_statement}</div>
+                        <div>Doc ID: {chunk.metadata.doc_id}</div>
+                        <div>Thread ID: {chunk.metadata.thread_id}</div>
+                        <div>File ID: {chunk.metadata.file_id}</div>
+                        <div>Collection: {chunk.metadata._collection_name} | Chunk ID: {chunk.metadata._id}</div>
                       </div>
                     </CardHeader>
                     <CardContent>
