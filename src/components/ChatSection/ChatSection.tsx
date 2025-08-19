@@ -100,7 +100,7 @@ const ChatSection = () => {
                                 </ScrollArea>
 
                                 {/* Filter Dialog Box */}
-                                <div className="relative">
+                                <div className="relative pl-5 pr-16">
                                     <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                                         <CollapsibleTrigger asChild>
                                             <Button 
@@ -136,7 +136,7 @@ const ChatSection = () => {
                                     </Collapsible>
                                 </div>
 
-                                <form className="chat-input" onSubmit={handleSubmit}>
+                                <form className="chat-input pt-1" onSubmit={handleSubmit}>
                                     <Input
                                         type="text"
                                         value={inputMessage}
