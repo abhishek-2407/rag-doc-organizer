@@ -19,18 +19,19 @@ interface ChunkResponse {
   message: string;
   chunks: Array<{
     id: string | null;
-    metadata: {
-      doc_id: string;
-      thread_id: string;
-      file_id: string;
-      file_name: string;
-      page_number: number;
-      type: string;
-      is_financial_statement: string;
-      statement_type: string;
-      _id: string;
-      _collection_name: string;
-    };
+      metadata: {
+        doc_id: string;
+        thread_id: string;
+        file_id: string;
+        file_name: string;
+        page_number: number;
+        type: string;
+        is_financial_statement: string;
+        statement_type: string;
+        notes: string;
+        _id: string;
+        _collection_name: string;
+      };
     page_content: string;
     type: string;
   }>;
@@ -42,6 +43,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
   const [pageList, setPageList] = useState('');
   const [statementTypes, setStatementTypes] = useState<string[]>([]);
   const [isFinancialStatement, setIsFinancialStatement] = useState('');
+  const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chunks, setChunks] = useState<ChunkResponse | null>(null);
 
@@ -76,7 +78,8 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
         top_k: topK,
         page_list: pageList.split(',').map(p => p.trim()).filter(p => p),
         statement_type: statementTypes,
-        is_financial_statement: isFinancialStatement
+        is_financial_statement: isFinancialStatement,
+        notes: notes
       };
 
       const response = await fetch(`${ApiUrl}/doc-eval/retrieve-chunks`, {
@@ -192,6 +195,19 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
             </Select>
           </div>
 
+          <div>
+            <Label className="text-white mb-2 block">Notes</Label>
+            <Select value={notes} onValueChange={setNotes}>
+              <SelectTrigger className="bg-gray-800 text-white border-gray-600">
+                <SelectValue placeholder="Select Yes, No or leave empty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button 
             type="submit" 
             disabled={isLoading}
@@ -220,7 +236,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
                         {chunk.metadata.file_name} - Page {chunk.metadata.page_number}
                       </CardTitle>
                       <div className="text-xs text-gray-400 space-y-1">
-                        <div>Type: {chunk.metadata.type} | Statement: {chunk.metadata.statement_type} | Financial: {chunk.metadata.is_financial_statement}</div>
+                        <div>Type: {chunk.metadata.type} | Statement: {chunk.metadata.statement_type} | Financial: {chunk.metadata.is_financial_statement} | Notes: {chunk.metadata.notes}</div>
                         <div>Doc ID: {chunk.metadata.doc_id}</div>
                         <div>Thread ID: {chunk.metadata.thread_id}</div>
                         <div>File ID: {chunk.metadata.file_id}</div>
