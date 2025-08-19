@@ -100,36 +100,41 @@ const ChatSection = () => {
                                 </ScrollArea>
 
                                 {/* Filter Dialog Box */}
-                                <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-                                    <CollapsibleTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm"
-                                            className="w-full mb-2 text-gray-400 hover:text-white hover:bg-gray-800 justify-between"
-                                        >
-                                            <span>Chat Filters</span>
-                                            {isFilterOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                                        </Button>
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent className="mb-3">
-                                        <div className="bg-gray-800 p-3 rounded-lg border border-gray-600">
-                                            <div className="flex items-center space-x-2">
-                                                <Checkbox 
-                                                    id="include-notes"
-                                                    checked={includeNotes}
-                                                    onCheckedChange={(checked) => setIncludeNotes(checked as boolean)}
-                                                    className="border-gray-400"
-                                                />
-                                                <Label 
-                                                    htmlFor="include-notes" 
-                                                    className="text-sm text-gray-300 cursor-pointer"
-                                                >
-                                                    Include Notes section
-                                                </Label>
+                                <div className="relative">
+                                    <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                                        <CollapsibleTrigger asChild>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm"
+                                                className="w-full text-xs text-gray-400 hover:text-white hover:bg-gray-800 justify-between h-6 px-2 mb-0"
+                                            >
+                                                <span className="text-xs">Chat Filters</span>
+                                                {isFilterOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                                            </Button>
+                                        </CollapsibleTrigger>
+                                        <CollapsibleContent>
+                                            <div className="bg-gray-800 p-2 rounded-lg border border-gray-600 mb-0">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="flex items-center space-x-2">
+                                                        <Checkbox 
+                                                            id="include-notes"
+                                                            checked={includeNotes}
+                                                            onCheckedChange={(checked) => setIncludeNotes(checked as boolean)}
+                                                            className="border-gray-400 h-3 w-3"
+                                                        />
+                                                        <Label 
+                                                            htmlFor="include-notes" 
+                                                            className="text-xs text-gray-300 cursor-pointer"
+                                                        >
+                                                            Include Notes section
+                                                        </Label>
+                                                    </div>
+                                                    {/* Future filters will go here side by side */}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </CollapsibleContent>
-                                </Collapsible>
+                                        </CollapsibleContent>
+                                    </Collapsible>
+                                </div>
 
                                 <form className="chat-input" onSubmit={handleSubmit}>
                                     <Input
