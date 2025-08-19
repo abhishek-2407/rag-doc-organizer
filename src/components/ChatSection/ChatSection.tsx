@@ -1,10 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, ChevronRight, FolderOpen, File, FileText } from 'lucide-react';
+import { Send, ChevronRight, FolderOpen, File, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { useChatMessages } from './useChatMessages';
 import { useFileSelection } from './useFileSelection';
 import { FolderTree } from './FolderTree';
@@ -14,6 +17,8 @@ import './ChatSection.css';
 
 const ChatSection = () => {
     const [showChunks, setShowChunks] = useState(false);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [includeNotes, setIncludeNotes] = useState(false);
     
     const {
         messages,
@@ -23,6 +28,7 @@ const ChatSection = () => {
         handleSubmit,
         chatContainerRef,
         setSelectedFiles,
+        setNotesFilter,
     } = useChatMessages();
 
     const {
@@ -45,6 +51,11 @@ const ChatSection = () => {
         });
         setSelectedFiles(selectedFilesWithNames);
     }, [selectedFileIds, files, setSelectedFiles]);
+
+    // Update notes filter in chat messages hook
+    useEffect(() => {
+        setNotesFilter(includeNotes ? "Yes" : "No");
+    }, [includeNotes, setNotesFilter]);
 
     return (
         <div className='chat-section'>
@@ -87,6 +98,38 @@ const ChatSection = () => {
                                 <ScrollArea className="chat-messages" ref={chatContainerRef}>
                                     <MessageList messages={messages} />
                                 </ScrollArea>
+
+                                {/* Filter Dialog Box */}
+                                <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                                    <CollapsibleTrigger asChild>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm"
+                                            className="w-full mb-2 text-gray-400 hover:text-white hover:bg-gray-800 justify-between"
+                                        >
+                                            <span>Chat Filters</span>
+                                            {isFilterOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                        </Button>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="mb-3">
+                                        <div className="bg-gray-800 p-3 rounded-lg border border-gray-600">
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox 
+                                                    id="include-notes"
+                                                    checked={includeNotes}
+                                                    onCheckedChange={(checked) => setIncludeNotes(checked as boolean)}
+                                                    className="border-gray-400"
+                                                />
+                                                <Label 
+                                                    htmlFor="include-notes" 
+                                                    className="text-sm text-gray-300 cursor-pointer"
+                                                >
+                                                    Include Notes section
+                                                </Label>
+                                            </div>
+                                        </div>
+                                    </CollapsibleContent>
+                                </Collapsible>
 
                                 <form className="chat-input" onSubmit={handleSubmit}>
                                     <Input
