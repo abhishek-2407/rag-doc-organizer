@@ -29,6 +29,7 @@ interface ChunkResponse {
         is_financial_statement: string;
         statement_type: string;
         notes: string;
+        core_statements: string;
         _id: string;
         _collection_name: string;
       };
@@ -44,6 +45,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
   const [statementTypes, setStatementTypes] = useState<string[]>([]);
   const [isFinancialStatement, setIsFinancialStatement] = useState('');
   const [notes, setNotes] = useState('');
+  const [coreStatements, setCoreStatements] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chunks, setChunks] = useState<ChunkResponse | null>(null);
 
@@ -79,7 +81,8 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
         page_list: pageList.split(',').map(p => p.trim()).filter(p => p),
         statement_type: statementTypes,
         is_financial_statement: isFinancialStatement,
-        notes: notes
+        notes: notes,
+        core_statements: coreStatements
       };
 
       const response = await fetch(`${ApiUrl}/doc-eval/retrieve-chunks`, {
@@ -208,6 +211,19 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
             </Select>
           </div>
 
+          <div>
+            <Label className="text-white mb-2 block">Core Statements</Label>
+            <Select value={coreStatements} onValueChange={setCoreStatements}>
+              <SelectTrigger className="bg-gray-800 text-white border-gray-600">
+                <SelectValue placeholder="Select Yes, No or leave empty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button 
             type="submit" 
             disabled={isLoading}
@@ -236,7 +252,7 @@ const ChunksRetrieval: React.FC<ChunksRetrievalProps> = ({ selectedFiles }) => {
                         {chunk.metadata.file_name} - Page {chunk.metadata.page_number}
                       </CardTitle>
                       <div className="text-xs text-gray-400 space-y-1">
-                        <div>Type: {chunk.metadata.type} | Statement: {chunk.metadata.statement_type} | Financial: {chunk.metadata.is_financial_statement} | Notes: {chunk.metadata.notes}</div>
+                        <div>Type: {chunk.metadata.type} | Statement: {chunk.metadata.statement_type} | Financial: {chunk.metadata.is_financial_statement} | Notes: {chunk.metadata.notes} | Core: {chunk.metadata.core_statements}</div>
                         <div>Doc ID: {chunk.metadata.doc_id}</div>
                         <div>Thread ID: {chunk.metadata.thread_id}</div>
                         <div>File ID: {chunk.metadata.file_id}</div>
