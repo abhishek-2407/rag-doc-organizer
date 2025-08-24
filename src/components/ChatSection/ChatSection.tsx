@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { useChatMessages } from './useChatMessages';
 import { useFileSelection } from './useFileSelection';
 import { FolderTree } from './FolderTree';
@@ -19,6 +20,7 @@ const ChatSection = () => {
     const [showChunks, setShowChunks] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [includeNotes, setIncludeNotes] = useState(false);
+    const [isCoreMode, setIsCoreMode] = useState(false);
     
     const {
         messages,
@@ -29,6 +31,7 @@ const ChatSection = () => {
         chatContainerRef,
         setSelectedFiles,
         setNotesFilter,
+        setVersion,
     } = useChatMessages();
 
     const {
@@ -57,6 +60,11 @@ const ChatSection = () => {
         setNotesFilter(includeNotes ? "Yes" : "No");
     }, [includeNotes, setNotesFilter]);
 
+    // Update version in chat messages hook
+    useEffect(() => {
+        setVersion(isCoreMode ? "core" : "doc");
+    }, [isCoreMode, setVersion]);
+
     return (
         <div className='chat-section'>
             <div className="chat-layout">
@@ -80,15 +88,32 @@ const ChatSection = () => {
                         <h1>Document Analysis</h1>
                         <div className="flex items-center gap-4">
                             <h2>Get Insights</h2>
-                            <Button
-                                onClick={() => setShowChunks(!showChunks)}
-                                variant="outline"
-                                size="sm"
-                                className="bg-transparent border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white"
-                            >
-                                <FileText className="mr-2 h-4 w-4" />
-                                {showChunks ? 'Back to Chat' : 'Get Chunks'}
-                            </Button>
+                            <div className="flex items-center gap-4">
+                                {/* Version Toggle */}
+                                <div className="flex items-center space-x-2">
+                                    <Label htmlFor="version-mode" className="text-xs text-gray-300">
+                                        Full Doc
+                                    </Label>
+                                    <Switch
+                                        id="version-mode"
+                                        checked={isCoreMode}
+                                        onCheckedChange={setIsCoreMode}
+                                        className="data-[state=checked]:bg-pink-600"
+                                    />
+                                    <Label htmlFor="version-mode" className="text-xs text-gray-300">
+                                        Core Statement
+                                    </Label>
+                                </div>
+                                <Button
+                                    onClick={() => setShowChunks(!showChunks)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="bg-transparent border-pink-600 text-pink-600 hover:bg-pink-600 hover:text-white"
+                                >
+                                    <FileText className="mr-2 h-4 w-4" />
+                                    {showChunks ? 'Back to Chat' : 'Get Chunks'}
+                                </Button>
+                            </div>
                         </div>
                     </div>
 
@@ -99,9 +124,10 @@ const ChatSection = () => {
                                     <MessageList messages={messages} />
                                 </ScrollArea>
 
-                                {/* Filter Dialog Box */}
-                                <div className="relative pl-5 pr-16">
-                                    <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                                {/* Filter Dialog Box - Hidden in Core mode */}
+                                {!isCoreMode && (
+                                    <div className="relative pl-5 pr-16">
+                                        <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
                                         <CollapsibleTrigger asChild>
                                             <Button 
                                                 variant="ghost" 
@@ -135,6 +161,7 @@ const ChatSection = () => {
                                         </CollapsibleContent>
                                     </Collapsible>
                                 </div>
+                                )}
 
                                 <form className="chat-input pt-1" onSubmit={handleSubmit}>
                                     <Input

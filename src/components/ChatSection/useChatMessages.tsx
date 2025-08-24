@@ -16,6 +16,7 @@ export const useChatMessages = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<{file_id: string, file_name: string}[]>([]);
     const [notesFilter, setNotesFilter] = useState<string>("No");
+    const [version, setVersion] = useState<string>("doc");
     const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
     const [isUserScrolling, setIsUserScrolling] = useState(false);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -120,6 +121,7 @@ export const useChatMessages = () => {
                     query_id: "query_1",
                     file_id_list: selectedFiles,
                     notes: notesFilter,
+                    version: version,
                     stream: true
                 })
             });
@@ -207,6 +209,7 @@ export const useChatMessages = () => {
         setSelectedFiles,
         selectedFiles,
         setNotesFilter,
+        setVersion,
         handleSubmit,
         chatContainerRef,
     };
