@@ -86,9 +86,9 @@ const ChatSection = () => {
                 <div className="right-panel">
                     <div className="chat-header">
                         <h1>Document Analysis</h1>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between gap-4">
                             <h2>Get Insights</h2>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-12">
                                 {/* Version Toggle */}
                                 <div className="flex items-center space-x-2">
                                     <Label htmlFor="version-mode" className="text-xs text-gray-300">
